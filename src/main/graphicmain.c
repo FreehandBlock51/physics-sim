@@ -1,0 +1,173 @@
+/**
+ * The entry point for the simulation -- graphical mode
+ */
+
+#include <stdio.h>
+#include <malloc.h>
+#include <gl_includes.h>
+#include <cglm/call.h>
+#include "common/defines.h"
+#include "viewer/window.h"
+#include "viewer/shader.h"
+#include "viewer/color.h"
+#include "viewer/camera.h"
+#include "viewer/vertex.h"
+
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define WINDOW_NAME "Physics Sim"
+const color_t WINDOW_BACKGROUND_COLOR = COLOR_PURPLE;
+
+#include "shaders/matrix_vertex.h"
+#include "shaders/uniform_color_fragment.h"
+
+int graphic_main(void) {
+    int result;
+    window_t *window = calloc(1, sizeof(window_t));
+    if ((result = window_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, window))) {
+        return result;
+    }
+
+
+    const float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.0f,  0.5f, 0.0f
+    };
+
+    l_printf("Building shaders...\n");
+
+    l_printf("Compiling vertex shader...\n");
+    shader_t vertex_shader;
+    if ((result = shader_compile(GL_VERTEX_SHADER, shader_src_matrix_vertex, &vertex_shader))) {
+        glfwTerminate();
+        return result;
+    }
+
+    l_printf("Compiling fragment shader...\n");
+    shader_t fragment_shader;
+    if ((result = shader_compile(GL_FRAGMENT_SHADER, shader_src_uniform_color_fragment, &fragment_shader))) {
+        return result;
+    }
+
+    shader_program_t shader_program = shader_program_create();
+
+    l_printf("Attaching vertex shader...\n");
+    shader_program_attach_shader(shader_program, vertex_shader);
+
+    l_printf("Attaching fragment shader...\n");
+    shader_program_attach_shader(shader_program, fragment_shader);
+
+    l_printf("Linking program...\n");
+    if ((result = shader_program_link(shader_program)) != 0) {
+        return result;
+    }
+
+    shader_uniform_t u_model = shader_uniform_get_location(shader_program, "model");
+    shader_uniform_t u_view = shader_uniform_get_location(shader_program, "view");
+    shader_uniform_t u_projection = shader_uniform_get_location(shader_program, "projection");
+    shader_uniform_t u_color = shader_uniform_get_location(shader_program, "color");
+
+    shader_delete(vertex_shader);
+    shader_delete(fragment_shader);
+
+    l_printf("Shaders successfully built!\n");
+
+    // Create a Vertex Array Object (VAO) to store the environment we
+    // need to draw (vertices, vertex attributes, etc.)
+    GLuint VAO;
+    glGenVertexArrays(1, &VAO);
+
+    glBindVertexArray(VAO);
+
+    // Create a Vertex Buffer Object (VBO) to store our vertices
+    GLuint VBO;
+    glGenBuffers(1, &VBO);
+    
+    // put vertices in the VBO
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // set vertex attributes (how shader expects vertex layout)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    color_t color = COLOR_GREEN;
+
+    mat4 model; // generated each frame
+
+    vec3 m_translation;
+    glmc_vec3_zero(m_translation);
+    m_translation[0] = 0.5;
+
+    vec3 m_axis;
+    glmc_vec3_zero(m_axis);
+    m_axis[2] = 1.0;
+    float m_angle = 0.001;
+
+    vec3 m_scale;
+    glmc_vec3_one(m_scale);
+
+    camera_t camera;
+    camera_make(&camera, (vec3){ 0, 0, 10 }, (vec3){ 0, 0, -1 }, (vec3){ 0, 1, 0 }, GLM_PI_4f, 0.1f, 100.0f);
+
+    mat4 view;
+
+    mat4 projection;
+
+    while (!window_should_close(*window))
+    {
+        window_clear(WINDOW_BACKGROUND_COLOR);
+
+        // modify transformations
+        if (window_is_key_down(window, GLFW_KEY_R)) {
+            m_angle += 0.001;
+        }
+        if (window_is_key_down(window, GLFW_KEY_UP)) {
+            m_translation[1] += 0.001;
+        }
+        if (window_is_key_down(window, GLFW_KEY_DOWN)) {
+            m_translation[1] -= 0.001;
+        }
+        if (window_is_key_down(window, GLFW_KEY_RIGHT)) {
+            m_translation[0] += 0.001;
+        }
+        if (window_is_key_down(window, GLFW_KEY_LEFT)) {
+            m_translation[0] -= 0.001;
+        }
+        if (window_is_key_down(window, GLFW_KEY_RIGHT_BRACKET)) {
+            m_translation[2] += 0.001;
+        }
+        if (window_is_key_down(window, GLFW_KEY_LEFT_BRACKET)) {
+            m_translation[2] -= 0.001;
+        }
+        if (window_is_key_released(window, GLFW_KEY_Q)) {
+            printf("window closing...\n");
+            window_close(*window);
+        }
+
+        // generate transformation matrix
+        glmc_mat4_identity(model);
+        glmc_translate(model, m_translation);
+        glmc_rotate(model, m_angle, m_axis);
+
+        camera_gen_view_matrix(camera, view);
+        camera_gen_projection_matrix(camera, *window, projection);
+
+        // set VAO and shader, then draw
+        shader_program_use(shader_program);
+        // cast to float* because we know that a matrix works here
+        glUniformMatrix4fv(u_model, 1, GL_FALSE, (float*)model);
+        glUniformMatrix4fv(u_view, 1, GL_FALSE, (float*)view);
+        glUniformMatrix4fv(u_projection, 1, GL_FALSE, (float*)projection);
+        shader_uniform_set(u_color, color); // glUniform4f(u_color, color.r, color.g, color.b, color.a);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        window_end_drawing(window);
+    }
+
+    free(window);
+    window_cleanup();
+    return 0;
+}

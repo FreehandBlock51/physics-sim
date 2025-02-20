@@ -1,0 +1,21 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/dalto/physics-sim/build",
+            "binaryPath": "/home/dalto/physics-sim/build/phy-sim",
+            "binaryArgs": []
+        }
+    ],
+    "files.associations": {
+        "*.fragment": "glsl",
+        "*.vertex": "glsl",
+        "stdlib.h": "c",
+        "mat4x4.h": "c",
+        "cglm.h": "c",
+        "uniform_color_fragment.h": "c",
+        "mat4.h": "c",
+        "stdio.h": "c",
+        "stdio_ext.h": "c"
+    },
+    "C_Cpp.doxygen.generatedStyle": "/**"
+}
