@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <gl_includes.h>
-#include <cglm/call.h>
+#include <cglm/cglm.h>
 #include "common/defines.h"
 #include "viewer/window.h"
 #include "viewer/shader.h"
@@ -83,7 +83,7 @@ int graphic_main(void) {
     // Create a Vertex Buffer Object (VBO) to store our vertices
     GLuint VBO;
     glGenBuffers(1, &VBO);
-    
+
     // put vertices in the VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -97,16 +97,16 @@ int graphic_main(void) {
     mat4 model; // generated each frame
 
     vec3 m_translation;
-    glmc_vec3_zero(m_translation);
+    glm_vec3_zero(m_translation);
     m_translation[0] = 0.5;
 
     vec3 m_axis;
-    glmc_vec3_zero(m_axis);
+    glm_vec3_zero(m_axis);
     m_axis[2] = 1.0;
     float m_angle = 0.001;
 
     vec3 m_scale;
-    glmc_vec3_one(m_scale);
+    glm_vec3_one(m_scale);
 
     camera_t camera;
     camera_make(&camera, (vec3){ 0, 0, 10 }, (vec3){ 0, 0, -1 }, (vec3){ 0, 1, 0 }, GLM_PI_4f, 0.1f, 100.0f);
@@ -147,9 +147,9 @@ int graphic_main(void) {
         }
 
         // generate transformation matrix
-        glmc_mat4_identity(model);
-        glmc_translate(model, m_translation);
-        glmc_rotate(model, m_angle, m_axis);
+        glm_mat4_identity(model);
+        glm_translate(model, m_translation);
+        glm_rotate(model, m_angle, m_axis);
 
         camera_gen_view_matrix(camera, view);
         camera_gen_projection_matrix(camera, *window, projection);
