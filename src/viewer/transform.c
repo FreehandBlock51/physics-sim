@@ -77,20 +77,20 @@ PRIVATE_FUNC void gen_rotation_matrix(mat4x4_t dest, quaternion_t rotation) {
 }
 
 PRIVATE_FUNC void gen_scale_matrix(mat4x4_t dest, vec3_t scale) {
-    dest[0][0] = scale.x;
-    dest[0][1] = scale.x;
-    dest[0][2] = scale.x;
-    dest[0][3] = scale.x;
+    dest[0][0] *= scale.x;
+    dest[0][1] *= scale.x;
+    dest[0][2] *= scale.x;
+    dest[0][3] *= scale.x;
 
-    dest[1][0] = scale.y;
-    dest[1][1] = scale.y;
-    dest[1][2] = scale.y;
-    dest[1][3] = scale.y;
+    dest[1][0] *= scale.y;
+    dest[1][1] *= scale.y;
+    dest[1][2] *= scale.y;
+    dest[1][3] *= scale.y;
 
-    dest[2][0] = scale.z;
-    dest[2][1] = scale.z;
-    dest[2][2] = scale.z;
-    dest[2][3] = scale.z;
+    dest[2][0] *= scale.z;
+    dest[2][1] *= scale.z;
+    dest[2][2] *= scale.z;
+    dest[2][3] *= scale.z;
 }
 
 void transform_gen_matrix(transform_t transform, mat4x4_t dest) {
