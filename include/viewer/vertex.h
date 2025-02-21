@@ -43,6 +43,7 @@ typedef GLfloat varray_item_t;
 struct VertexArray {
     varray_item_t *array;
     size_t size;
+    size_t stride;
     size_t capacity;
 };
 typedef struct VertexArray varray_t;
@@ -50,14 +51,15 @@ typedef struct VertexArray varray_t;
 /**
  * @brief Creates a vertex array
  * @param initial_capacity The initial capacity of the array
+ * @param stride The number of items in a single vertex
  * @return A pointer to the array on success, or NULL on failure
  */
-varray_t *varray_create(size_t initial_capacity);
+varray_t *varray_create(size_t initial_capacity, size_t stride);
 
 /**
  * Creates a vertex array with the default initial capacity
  */
-#define varray_make() varray_create(VARRAY_DEFAULT_CAPACITY)
+#define varray_make(stride) varray_create(VARRAY_DEFAULT_CAPACITY, stride)
 
 /**
  * @brief Adds a standard 3-valued vertex to the array

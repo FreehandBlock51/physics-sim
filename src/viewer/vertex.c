@@ -4,12 +4,13 @@
 #include <malloc.h>
 #include "common/defines.h"
 
-varray_t *varray_create(size_t initial_capacity) {
+varray_t *varray_create(size_t initial_capacity, size_t stride) {
     varray_t *array = calloc(1, (sizeof *array));
     if (array == NULL) {
         return NULL;
     }
     array->size = 0;
+    array->stride = stride;
     array->array = calloc(initial_capacity, (sizeof *array->array));
     if (array->array == NULL) {
         free(array);
@@ -108,7 +109,7 @@ void varray_draw(GLenum mode, varray_t *array) {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, array->size * (sizeof *array->array), array->array, GL_STATIC_DRAW);
 
-    size_t vertex_stride = TODO(); // the size of a single vertex
+    size_t vertex_stride = array->stride; // the size of a single vertex
     glVertexAttribPointer(0, array->size / vertex_stride, GL_FLOAT, GL_FALSE, vertex_stride, (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -213,7 +214,7 @@ void iarray_draw(GLenum mode, iarray_t *indices, varray_t *vertices) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size * (sizeof *indices->array), indices->array, GL_STATIC_DRAW);
 
-    size_t vertex_stride = TODO(); // the size of a single vertex
+    size_t vertex_stride = vertices->stride; // the size of a single vertex
     glVertexAttribPointer(0, vertices->size / vertex_stride, GL_FLOAT, GL_FALSE, vertex_stride, (void*)0);
     glEnableVertexAttribArray(0);
 
