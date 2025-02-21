@@ -25,7 +25,7 @@ SHADER_INCLUDE_DIR := ./build-include/shaders
 CFLAGS_ESSENTIAL ?= --std=c$(C_STANDARD) $(INC_FLAGS) -MMD -MP
 # turn on all the warnings and mark them as errors.  Don't take any chances
 # (except -pedantic; don't include it because then glad doesn't compile)
-CFLAGS_WARNINGS ?= -Wall  -Wextra
+CFLAGS_WARNINGS ?= -Wall -Werror -Wextra
 
 CFLAGS := $(CFLAGS_ESSENTIAL) $(CFLAGS_WARNINGS)
 
