@@ -31,3 +31,9 @@ void mat4x4_times_mat4x4(mat4x4_t dest, mat4x4_t a, mat4x4_t b);
  * Populates the given matrix with the 4x4 identity matrix
  */
 void mat4x4_make_identity(mat4x4_t matrix);
+
+/**
+ * @brief Prints a matrix to standard output
+ * @param matrix The matrix to print
+ */
+void mat4x4_print(mat4x4_t matrix);
