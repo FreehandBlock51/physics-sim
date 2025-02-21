@@ -12,9 +12,6 @@ extern int graphic_main(void);
 #define ENTRY_POINT graphic_main
 #endif
 
-#include <malloc.h>
-#include <stdio.h>
-
 int main(void) {
     return ENTRY_POINT();
 }
