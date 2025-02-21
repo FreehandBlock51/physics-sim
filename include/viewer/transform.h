@@ -32,6 +32,7 @@ void transform_make(
 /**
  * Initializes a blank transform
  * (position and rotation are 0; scale is 1)
+ * @todo This doesn't work yet
  */
 #define transform_default(transform) \
 transform_make(transform, VEC3_ZERO, quaternion_make(1, 0, 0, 0), VEC3_ONE)
