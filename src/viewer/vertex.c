@@ -16,6 +16,8 @@ varray_t *varray_create(size_t initial_capacity) {
         return NULL;
     }
     array->capacity = initial_capacity;
+
+    return array;
 }
 
 PRIVATE_FUNC int varray_resize_capacity(varray_t *array, size_t new_capacity) {
@@ -66,7 +68,7 @@ PRIVATE_FUNC int varray_shrink_to_current_size(varray_t *array) {
 
 int varray_add_vertex(varray_t *array, varray_item_t x, varray_item_t y, varray_item_t z) {
     VARRAY_DOUBLE_CAPACITY_IF_TOO_SMALL(array, 3)
-    
+
     varray_append_without_capacity_check(array, x);
     varray_append_without_capacity_check(array, y);
     varray_append_without_capacity_check(array, z);
@@ -87,7 +89,6 @@ int varray_add_floats(varray_t *array, varray_item_t *floats, size_t amount_to_a
     return VERTEX_SUCCESS;
 }
 
-
 int varray_clear(varray_t *array) {
     FAIL_UNLESS(int, varray_shrink_to_current_size(array), return)
 
@@ -102,7 +103,7 @@ void varray_draw(GLenum mode, varray_t *array) {
     if (VBO == 0) {
         glGenBuffers(1, &VBO);
     }
-    
+
     // put vertices in the VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, array->size * (sizeof *array->array), array->array, GL_STATIC_DRAW);
@@ -124,7 +125,7 @@ iarray_t *iarray_create(size_t initial_capacity) {
     if (array == NULL) {
         return NULL;
     }
-    
+
     array->size = 0;
     array->array = calloc(initial_capacity, (sizeof *array->array));
     if (array->array == NULL) {
@@ -132,7 +133,7 @@ iarray_t *iarray_create(size_t initial_capacity) {
         return NULL;
     }
     array->capacity = initial_capacity;
-    
+
     return array;
 }
 
@@ -203,12 +204,12 @@ void iarray_draw(GLenum mode, iarray_t *indices, varray_t *vertices) {
     if (VBO == 0) {
         glGenBuffers(1, &VBO);
     }
-    
+
     // put vertices in the VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices->size * (sizeof *vertices->array), vertices->array, GL_STATIC_DRAW);
 
-    // put indices in the EBO        
+    // put indices in the EBO
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices->size * (sizeof *indices->array), indices->array, GL_STATIC_DRAW);
 
@@ -219,6 +220,14 @@ void iarray_draw(GLenum mode, iarray_t *indices, varray_t *vertices) {
 
 
     glDrawArrays(mode, 0, vertices->size);
+}
+
+int iarray_clear(iarray_t *array) {
+    FAIL_UNLESS(int, iarray_shrink_to_current_size(array), return)
+
+    array->size = 0; // faster than clearing the memory
+
+    return VERTEX_SUCCESS;
 }
 
 void iarray_destroy(iarray_t *array) {
@@ -239,7 +248,7 @@ ivarray_t *ivarray_create(size_t initial_vertex_capacity, size_t initial_index_c
         free(array);
         return NULL;
     }
-    
+
     array->indexes = iarray_create(initial_index_capacity);
     if (array->indexes == NULL) {
         free(array->vertices);

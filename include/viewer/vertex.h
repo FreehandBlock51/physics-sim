@@ -154,6 +154,13 @@ int iarray_add_indices(iarray_t *array, iarray_item_t *indices, size_t index_cou
 void iarray_draw(GLenum mode, iarray_t *indices, varray_t *vertices);
 
 /**
+ * @brief Clears the contents of the array
+ * @param array The array to clear
+ * @note This function may not actually zero out its contents
+ */
+int iarray_clear(iarray_t *array);
+
+/**
  * @brief Frees an index array
  * @param array The array to free
  */
