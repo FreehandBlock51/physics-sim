@@ -38,52 +38,64 @@ void transform_set_scale(transform_t *transform, vec3_t scale) {
 }
 
 /* Utility functions for matrix generation */
-PRIVATE_FUNC void gen_translation_matrix(mat4x4_t *dest, vec3_t translation) {
-    mat4x4_make_identity(*dest);
-    *dest[0][3] = translation.x;
-    *dest[1][3] = translation.y;
-    *dest[2][3] = translation.z;
+PRIVATE_FUNC void gen_translation_matrix(mat4x4_t dest, vec3_t translation) {
+    dest[0][3] += translation.x;
+    dest[1][3] += translation.y;
+    dest[2][3] += translation.z;
 }
 
-PRIVATE_FUNC void gen_rotation_matrix(mat4x4_t *dest, quaternion_t rotation) {
+PRIVATE_FUNC void gen_rotation_matrix(mat4x4_t dest, quaternion_t rotation) {
     // taken and modified from https://automaticaddison.com/how-to-convert-a-quaternion-to-a-rotation-matrix/
 
-    mat4x4_make_identity(*dest);
+    // we first make a fresh rotation matrix, then multiply it with dest
+    mat4x4_t tmp = MAT4x4_IDENTITY;
 
     // First row of the rotation matrix
-    *dest[0][0] = 2.0 * (rotation.w * rotation.w + rotation.x * rotation.x) - 1;
-    *dest[0][1] = 2.0 * (rotation.x * rotation.y - rotation.w * rotation.z);
-    *dest[0][2] = 2.0 * (rotation.x * rotation.z + rotation.w * rotation.y);
+    tmp[0][0] = 2.0 * (rotation.w * rotation.w + rotation.x * rotation.x) - 1;
+    tmp[0][1] = 2.0 * (rotation.x * rotation.y - rotation.w * rotation.z);
+    tmp[0][2] = 2.0 * (rotation.x * rotation.z + rotation.w * rotation.y);
+    tmp[0][3] = 0;
 
     // Second row of the rotation matrix
-    *dest[1][0] = 2.0 * (rotation.x * rotation.y + rotation.w * rotation.z);
-    *dest[1][1] = 2.0 * (rotation.w * rotation.w + rotation.y * rotation.y) - 1;
-    *dest[1][2] = 2.0 * (rotation.y * rotation.z - rotation.w * rotation.x);
+    tmp[1][0] = 2.0 * (rotation.x * rotation.y + rotation.w * rotation.z);
+    tmp[1][1] = 2.0 * (rotation.w * rotation.w + rotation.y * rotation.y) - 1;
+    tmp[1][2] = 2.0 * (rotation.y * rotation.z - rotation.w * rotation.x);
+    tmp[1][3] = 0;
 
     // Third row of the rotation matrix
-    *dest[2][0] = 2.0 * (rotation.x * rotation.z - rotation.w * rotation.y);
-    *dest[2][1] = 2.0 * (rotation.y * rotation.z + rotation.w * rotation.x);
-    *dest[2][2] = 2.0 * (rotation.w * rotation.w + rotation.z * rotation.z) - 1;
+    tmp[2][0] = 2.0 * (rotation.x * rotation.z - rotation.w * rotation.y);
+    tmp[2][1] = 2.0 * (rotation.y * rotation.z + rotation.w * rotation.x);
+    tmp[2][2] = 2.0 * (rotation.w * rotation.w + rotation.z * rotation.z) - 1;
+    tmp[2][3] = 0;
+    
+    tmp[3][0] = 0;
+    tmp[3][1] = 0;
+    tmp[3][2] = 0;
+    tmp[3][3] = 1;
+
+    mat4x4_times_mat4x4(dest, dest, tmp);
 }
 
-PRIVATE_FUNC void gen_scale_matrix(mat4x4_t *dest, vec3_t scale) {
-    mat4x4_make_identity(*dest);
-    *dest[0][0] = scale.x;
-    *dest[1][1] = scale.y;
-    *dest[2][2] = scale.z;
+PRIVATE_FUNC void gen_scale_matrix(mat4x4_t dest, vec3_t scale) {
+    dest[0][0] = scale.x;
+    dest[0][1] = scale.x;
+    dest[0][2] = scale.x;
+    dest[0][3] = scale.x;
+
+    dest[1][0] = scale.y;
+    dest[1][1] = scale.y;
+    dest[1][2] = scale.y;
+    dest[1][3] = scale.y;
+
+    dest[2][0] = scale.z;
+    dest[2][1] = scale.z;
+    dest[2][2] = scale.z;
+    dest[2][3] = scale.z;
 }
 
-void transform_gen_matrix(transform_t transform, mat4x4_t *dest) {
-    mat4x4_t intermediate = MAT4x4_IDENTITY; // used as dest for the individual generators
-
-    // first generation applies to dest directly because we are
-    // overwriting what was already in there before the call
+void transform_gen_matrix(transform_t transform, mat4x4_t dest) {
+    mat4x4_make_identity(dest);
     gen_translation_matrix(dest, transform.position);
-
-    // after the first generation, gen to intermediate and multiply with
-    // dest
-    gen_rotation_matrix(&intermediate, transform.rotation);
-    mat4x4_times_mat4x4(*dest, *dest, intermediate);
-    gen_scale_matrix(&intermediate, transform.scale);
-    mat4x4_times_mat4x4(*dest, *dest, intermediate);
+    gen_rotation_matrix(dest, transform.rotation);
+    gen_scale_matrix(dest, transform.scale);
 }

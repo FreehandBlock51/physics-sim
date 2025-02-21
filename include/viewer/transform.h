@@ -70,4 +70,4 @@ void transform_set_scale(transform_t *transform, vec3_t scale);
 /**
  * Generates a transformation matrix
  */
-void transform_gen_matrix(transform_t transform, mat4x4_t *dest);
+void transform_gen_matrix(transform_t transform, mat4x4_t dest);
