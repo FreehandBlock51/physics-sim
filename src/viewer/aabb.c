@@ -1,8 +1,8 @@
 #include "viewer/aabb.h"
 
 void bbox_make_transform(bbox_t box, mat4 transform) {
-    glmc_mat4_identity(transform);
-    glmc_translate(transform, vec3_to_cglm(box.position));
+    glm_mat4_identity(transform);
+    glm_translate(transform, vec3_to_cglm(box.position));
 }
 
 /* Vertex array locations */

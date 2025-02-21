@@ -4,7 +4,7 @@
  * Utilities and definitions for a camera.
  */
 
-#include <cglm/call.h>
+#include <cglm/cglm.h>
 #include "common/defines.h"
 #include "viewer/window.h"
 

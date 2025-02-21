@@ -5,7 +5,7 @@
  */
 
 #include <gl_includes.h>
-#include <cglm/call.h>
+#include <cglm/cglm.h>
 #include "common/defines.h"
 #include "sim/aabb.h"
 
