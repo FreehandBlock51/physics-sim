@@ -29,7 +29,7 @@ CFLAGS_WARNINGS ?= -Wall -Werror -Wextra
 
 CFLAGS := $(CFLAGS_ESSENTIAL) $(CFLAGS_WARNINGS)
 
-CHECKTODOS_SCRIPT_ARGS ?= --no-error
+CHECKTODOS_SCRIPT_ARGS ?=
 
 # uncomment below for textmode:
 # CFLAGS += -D USE_TEXT
