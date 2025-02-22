@@ -17,10 +17,10 @@ typedef phy_real_t mat4x4_t[4][4];
  * The identity 4x4 matrix. Any matrix multiplied by this will remain
  * unchanged.
  */
-#define MAT4x4_IDENTITY {  { 1, 0, 0, 0 }, \
-                           { 0, 1, 0, 0 }, \
-                           { 0, 0, 1, 0 }, \
-                           { 0, 0, 0, 1 }  }
+#define MAT4x4_IDENTITY ((mat4x4_t) {  { 1, 0, 0, 0 }, \
+                                       { 0, 1, 0, 0 }, \
+                                       { 0, 0, 1, 0 }, \
+                                       { 0, 0, 0, 1 }  })
 
 /**
  * Multiplies matrix A by matrix B, storing the result (AxB) into dest
