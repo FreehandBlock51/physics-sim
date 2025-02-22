@@ -14,7 +14,6 @@ check_todos() {
 }
 
 found=0;
-# hello
 if [ -d "$1" ]; then
 	echo "$1 is a directory, scanning for C source/header files...";
 	prev_dir=$pwd;
