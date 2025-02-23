@@ -205,6 +205,9 @@ void iarray_draw(GLenum mode, iarray_t *indices, varray_t *vertices) {
     if (VBO == 0) {
         glGenBuffers(1, &VBO);
     }
+    if (EBO == 0) {
+        glGenBuffers(1, &EBO);
+    }
 
     // put vertices in the VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
