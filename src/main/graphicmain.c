@@ -6,12 +6,13 @@
 #include <malloc.h>
 #include <gl_includes.h>
 #include <cglm/cglm.h>
+#include "sim/aabb.h"
 #include "common/defines.h"
 #include "viewer/window.h"
 #include "viewer/shader.h"
 #include "viewer/color.h"
 #include "viewer/camera.h"
-#include "viewer/vertex.h"
+#include "viewer/aabb.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -21,6 +22,9 @@ const color_t WINDOW_BACKGROUND_COLOR = COLOR_PURPLE;
 #include "shaders/matrix_vertex.h"
 #include "shaders/uniform_color_fragment.h"
 
+static GLfloat vertices[BBOX_VERTEX_ARRAY_SIZE];
+static GLint   indices[BBOX_INDEX_ARRAY_SIZE];
+
 int graphic_main(void) {
     int result;
     window_t *window = calloc(1, sizeof(window_t));
@@ -28,12 +32,9 @@ int graphic_main(void) {
         return result;
     }
 
-
-    const float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-    };
+    bbox_t box;
+    bbox_make(&box, 0, 0, 0, 10, 10, 10);
+    bbox_gen_vertices(box, vertices, indices);
 
     l_printf("Building shaders...\n");
 
@@ -84,12 +85,20 @@ int graphic_main(void) {
     GLuint VBO;
     glGenBuffers(1, &VBO);
 
+    // Create an Element Buffer Object (EBO) to store our vertices
+    GLuint EBO = 0;
+    glGenBuffers(1, &EBO);
+
     // put vertices in the VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (sizeof vertices), vertices, GL_STATIC_DRAW);
+
+    // put indices in the EBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (sizeof indices), indices, GL_STATIC_DRAW);
 
     // set vertex attributes (how shader expects vertex layout)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * (sizeof *vertices), NULL);
     glEnableVertexAttribArray(0);
 
     color_t color = COLOR_GREEN;
@@ -103,7 +112,7 @@ int graphic_main(void) {
     vec3 m_axis;
     glm_vec3_zero(m_axis);
     m_axis[2] = 1.0;
-    float m_angle = 0.001;
+    float m_angle = 0.01;
 
     vec3 m_scale;
     glm_vec3_one(m_scale);
@@ -121,25 +130,25 @@ int graphic_main(void) {
 
         // modify transformations
         if (window_is_key_down(window, GLFW_KEY_R)) {
-            m_angle += 0.001;
+            m_angle += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_UP)) {
-            m_translation[1] += 0.001;
+            m_translation[1] += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_DOWN)) {
-            m_translation[1] -= 0.001;
+            m_translation[1] -= 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_RIGHT)) {
-            m_translation[0] += 0.001;
+            m_translation[0] += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_LEFT)) {
-            m_translation[0] -= 0.001;
+            m_translation[0] -= 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_RIGHT_BRACKET)) {
-            m_translation[2] += 0.001;
+            m_translation[2] += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_LEFT_BRACKET)) {
-            m_translation[2] -= 0.001;
+            m_translation[2] -= 0.01;
         }
         if (window_is_key_released(window, GLFW_KEY_ESCAPE)) {
             printf("window closing...\n");
