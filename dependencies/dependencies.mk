@@ -8,12 +8,12 @@ LIB_DIR ?=./lib
 DEPENDENCIES ?= glfw3
 
 ifeq ($(OS),Windows_NT)
-	DEPENDENCIES := $(patsubst %, $(LIB_DIR)/%.lib, $(DEPENDENCIES))
+	STATIC_LIB_PATHS ?= $(patsubst %, $(LIB_DIR)/%.lib, $(DEPENDENCIES))
 else
-	DEPENDENCIES := $(patsubst %, $(LIB_DIR)/lib%.a, $(DEPENDENCIES))
+	STATIC_LIB_PATHS ?= $(patsubst %, $(LIB_DIR)/lib%.a, $(DEPENDENCIES))
 endif
 
-build-dependencies: $(DEPENDENCIES)
+build-dependencies: $(STATIC_LIB_PATHS)
 	@echo all dependencies built! :D
 
 $(LIB_DIR)/glfw3.lib $(LIB_DIR)/libglfw3.a:
@@ -23,5 +23,5 @@ $(LIB_DIR)/glfw3.lib $(LIB_DIR)/libglfw3.a:
 	cp dependencies/build/glfw/src/glfw3.lib lib/glfw3.lib || true
 
 clean-dependencies:
-	rm lib/*
-	rm -r dependencies/build
+	$(RM) lib/*
+	$(RM) -r dependencies/build

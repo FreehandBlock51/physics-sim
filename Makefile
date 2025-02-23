@@ -35,11 +35,11 @@ CHECKTODOS_SCRIPT_ARGS ?=
 # CFLAGS += -D USE_TEXT
 
 # if for some reason we want to work with windows as well, future-proof this makefile
-ifeq ($(OS), Windows_NT)
-	STATIC_LIB_PATHS := $(wildcard $(LIB_DIR)/*.lib)
+DEPENDENCIES := glfw3
+ifeq ($(OS),Windows_NT)
+	STATIC_LIB_PATHS := $(patsubst %, $(LIB_DIR)/%.lib, $(DEPENDENCIES))
 else
-	STATIC_LIB_PATHS := $(wildcard $(LIB_DIR)/lib*.a)
-	LDFLAGS ?= -lX11 -lpthread -lXrandr -lXi -ldl
+	STATIC_LIB_PATHS := $(patsubst %, $(LIB_DIR)/lib%.a, $(DEPENDENCIES))
 endif
 LIBS := $(patsubst $(LIB_DIR)/%, %, $(STATIC_LIB_PATHS))
 LDFLAGS += -L$(LIB_DIR) $(addprefix -l:, $(LIBS)) -lGL -lm -pie
@@ -53,7 +53,13 @@ ENV_VARS :=
 .PHONY: default
 default: build
 
+export DEPENDENCIES
+export STATIC_LIB_PATHS
+export LIB_DIR
 include dependencies/dependencies.mk
+unexport LIB_DIR
+unexport STATIC_LIB_PATHS
+unexport DEPENDENCIES
 
 .PHONY: build run build-debug debug
 
