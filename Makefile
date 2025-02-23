@@ -89,7 +89,8 @@ $(BUILD_DIR)/%.c-debug.o: $(SRC_DIR)/%.c
 
 .PHONY: check_todos
 check_todos:
-	buildscripts/check_for_todos.sh . $(CHECKTODOS_SCRIPT_ARGS)
+	buildscripts/check_for_todos.sh ./src $(CHECKTODOS_SCRIPT_ARGS)
+	buildscripts/check_for_todos.sh ./include $(CHECKTODOS_SCRIPT_ARGS)
 .PHONY: build_shaders
 $(SHADERS): build_shaders
 build_shaders:
