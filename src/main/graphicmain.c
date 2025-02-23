@@ -141,7 +141,7 @@ int graphic_main(void) {
         if (window_is_key_down(window, GLFW_KEY_LEFT_BRACKET)) {
             m_translation[2] -= 0.001;
         }
-        if (window_is_key_released(window, GLFW_KEY_Q)) {
+        if (window_is_key_released(window, GLFW_KEY_ESCAPE)) {
             printf("window closing...\n");
             window_close(*window);
         }
