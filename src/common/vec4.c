@@ -1,8 +1,14 @@
 #include "common/vec4.h"
 
+#include <assert.h>
+#include <stdlib.h>
 #include <math.h>
 
 void vec4_add_to(vec4_t *dest, vec4_t source, phy_real_t factor) {
+    assert(dest != NULL);
+    if (dest == NULL) {
+        return;
+    }
     dest->x += source.x * factor;
     dest->y += source.y * factor;
     dest->z += source.z * factor;
@@ -10,6 +16,10 @@ void vec4_add_to(vec4_t *dest, vec4_t source, phy_real_t factor) {
 }
 
 void vec4_multiply_by(vec4_t *vec, phy_real_t factor) {
+    assert(vec != NULL);
+    if (vec == NULL) {
+        return;
+    }
     vec->x *= factor;
     vec->y *= factor;
     vec->z *= factor;
@@ -17,6 +27,10 @@ void vec4_multiply_by(vec4_t *vec, phy_real_t factor) {
 }
 
 void vec4_clear(vec4_t *vec) {
+    assert(vec != NULL);
+    if (vec == NULL) {
+        return;
+    }
     vec->x = 0;
     vec->y = 0;
     vec->z = 0;
@@ -54,11 +68,19 @@ phy_real_t vec4_magnitude(vec4_t vec) {
 }
 
 void vec4_unit(vec4_t *vec) {
+    assert(vec != NULL);
+    if (vec == NULL) {
+        return;
+    }
     phy_real_t magnitude = vec4_magnitude(*vec);
     vec4_multiply_by(vec, 1 / magnitude);
 }
 
 void vec4_cross_product(vec4_t *dest, vec4_t a, vec4_t b) {
+    assert(dest != NULL);
+    if (dest == NULL) {
+        return;
+    }
     dest->x =
         (a.x * b.x) - (a.y * b.y) - (a.z * b.z) - (a.w * b.w);
     dest->y =
@@ -78,12 +100,20 @@ phy_real_t vec4_dot_product(vec4_t a, vec4_t b) {
 }
 
 void quaternion_conjugate(quaternion_t *q) {
+    assert(q != NULL);
+    if (q == NULL) {
+        return;
+    }
     phy_real_t magnitude_sqr = quaternion_magnitude_sqr(*q);
     vec4_multiply_by(q, 1 / magnitude_sqr);
 }
 
 // both quaternion rotation methods taken and modified from https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
 void vec3_rotate_by_quaternion_pure(vec3_t *dest, vec3_t vec, quaternion_t q) {
+    assert(dest != NULL);
+    if (dest == NULL) {
+        return;
+    }
     quaternion_t expanded_vec = vec4_make(vec.x, vec.y, vec.z, 0);
     quaternion_product(&expanded_vec, q, expanded_vec);
     quaternion_conjugate(&q);
@@ -94,6 +124,10 @@ void vec3_rotate_by_quaternion_pure(vec3_t *dest, vec3_t vec, quaternion_t q) {
 }
 
 void vec3_rotate_by_quaternion_fast(vec3_t *dest, vec3_t source, quaternion_t q) {
+    assert(dest != NULL);
+    if (dest == NULL) {
+        return;
+    }
     // Extract the vector part of the quaternion
     vec3_t q_vec = vec3_make(q.x, q.y, q.z);
 
