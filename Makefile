@@ -21,13 +21,20 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 SHADER_DIR := ./shaders
 SHADER_INCLUDE_DIR := ./build-include/shaders
 
+# sanitizer flags.  These are a seperate variable so that both compiler
+# and linker get them
+SANITIZER_FLAGS ?=
+# Include address sanitization.  Checks for stuff like use-after-free,
+# memory leaks, etc.
+#SANITIZER_FLAGS += -fsanitize=address
+
 # the -MMs are for dependency generation, so header updates trigger the right rebuilds
 CFLAGS_ESSENTIAL ?= --std=c$(C_STANDARD) $(INC_FLAGS) -MMD -MP
 # turn on all the warnings and mark them as errors.  Don't take any chances
 # (except -pedantic; don't include it because then glad doesn't compile)
 CFLAGS_WARNINGS ?= -Wall -Werror -Wextra
 
-CFLAGS := $(CFLAGS_ESSENTIAL) $(CFLAGS_WARNINGS)
+CFLAGS := $(CFLAGS_ESSENTIAL) $(CFLAGS_WARNINGS) $(SANITIZER_FLAGS)
 
 CHECKTODOS_SCRIPT_ARGS ?=
 
@@ -42,11 +49,11 @@ else
 	STATIC_LIB_PATHS := $(patsubst %, $(LIB_DIR)/lib%.a, $(DEPENDENCIES))
 endif
 LIBS := $(patsubst $(LIB_DIR)/%, %, $(STATIC_LIB_PATHS))
-LDFLAGS += -L$(LIB_DIR) $(addprefix -l:, $(LIBS)) -lGL -lm -pie
+LDFLAGS += -L$(LIB_DIR) $(addprefix -l:, $(LIBS)) -lGL -lm -pie $(SANITIZER_FLAGS)
 
 ENV_VARS :=
 # use if your computer doesn't support OpenGL 3.3
-# ENV_VARS += LIBGL_ALWAYS_SOFTWARE=1
+#ENV_VARS += LIBGL_ALWAYS_SOFTWARE=1
 
 # default target (I think make sets the first target as the default)
 # runs if no target is passed to make
