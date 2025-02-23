@@ -15,5 +15,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: 'true'
+    - name: install-prereqs
+      run: ./install-prereqs.sh
     - name: make
       run: make CHECKTODOS_SCRIPT_ARGS=--no-error
