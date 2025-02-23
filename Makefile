@@ -53,15 +53,17 @@ ENV_VARS :=
 .PHONY: default
 default: build
 
+include dependencies/dependencies.mk
+
 .PHONY: build run build-debug debug
 
-build: $(BUILD_DIR)/$(TARGET_EXEC)
+build: build-dependencies $(BUILD_DIR)/$(TARGET_EXEC)
 	@echo build done :D
 
 run: build
 	$(ENV_VARS) $(BUILD_DIR)/$(TARGET_EXEC)
 
-build-debug: $(BUILD_DIR)/$(TARGET_EXEC)-debug
+build-debug: build-dependencies $(BUILD_DIR)/$(TARGET_EXEC)-debug
 	@echo debug build done :D
 
 debug: build-debug
@@ -100,7 +102,7 @@ $(SHADER_INCLUDE_DIR)/%.h: build_shaders
 
 .PHONY: clean
 
-clean:
+clean: clean-dependencies
 	$(RM) -r $(BUILD_DIR)
 
 -include $(DEPS)
