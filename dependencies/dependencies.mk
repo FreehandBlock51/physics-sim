@@ -19,8 +19,8 @@ build-dependencies: $(STATIC_LIB_PATHS)
 $(LIB_DIR)/glfw3.lib $(LIB_DIR)/libglfw3.a:
 	cmake -S dependencies/glfw -B dependencies/build/glfw -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_TESTS=OFF -D GLFW_BUILD_DOCS=OFF
 	$(MAKE) -C dependencies/build/glfw
-	cp dependencies/build/glfw/src/libglfw3.a lib/libglfw3.a || true
-	cp dependencies/build/glfw/src/glfw3.lib lib/glfw3.lib || true
+	mkdir -p lib
+	cp dependencies/build/glfw/src/libglfw3.a lib/libglfw3.a || cp dependencies/build/glfw/src/glfw3.lib lib/glfw3.lib
 
 clean-dependencies:
 	$(RM) lib/*
