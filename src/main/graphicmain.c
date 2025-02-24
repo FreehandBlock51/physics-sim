@@ -171,7 +171,7 @@ int graphic_main(void) {
         glUniformMatrix4fv(u_projection, 1, GL_FALSE, (float*)projection);
         shader_uniform_set(u_color, color); // glUniform4f(u_color, color.r, color.g, color.b, color.a);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, BBOX_INDEX_ARRAY_SIZE);
 
         window_end_drawing(window);
     }
