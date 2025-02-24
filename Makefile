@@ -15,11 +15,13 @@ OBJS := $(SRCS:$(SRC_DIR)/%=$(BUILD_DIR)/%.o)
 DEBUG_OBJS := $(OBJS:%.o=%-debug.o)
 DEPS := $(OBJS:.o=.d)
 
-INC_DIRS := ./include ./lib-include ./build-include
+BUILD_INCLUDE_DIR ?= ./build-include
+
+INC_DIRS := ./include ./lib-include $(BUILD_INCLUDE_DIR)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 SHADER_DIR := ./shaders
-SHADER_INCLUDE_DIR := ./build-include/shaders
+SHADER_INCLUDE_DIR := $(BUILD_INCLUDE_DIR)/shaders
 
 # sanitizer flags.  These are a seperate variable so that both compiler
 # and linker get them
@@ -125,6 +127,7 @@ check_todos:
 .PHONY: build_shaders
 $(SHADERS): build_shaders
 build_shaders:
+	$(MKDIR_P) $(SHADER_INCLUDE_DIR)
 	./buildscripts/build_shaders.sh $(SHADER_DIR) $(SHADER_INCLUDE_DIR) true
 
 $(SHADER_INCLUDE_DIR)/%.h: build_shaders
@@ -133,6 +136,7 @@ $(SHADER_INCLUDE_DIR)/%.h: build_shaders
 
 clean: clean-dependencies
 	$(RM) -r $(BUILD_DIR)
+	$(RM) -r $(BUILD_INCLUDE_DIR)
 
 -include $(DEPS)
 
