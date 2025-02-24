@@ -23,7 +23,7 @@ const color_t WINDOW_BACKGROUND_COLOR = COLOR_PURPLE;
 #include "shaders/uniform_color_fragment.h"
 
 static GLfloat vertices[BBOX_VERTEX_ARRAY_SIZE];
-static GLint   indices[BBOX_INDEX_ARRAY_SIZE];
+static GLuint  indices[BBOX_INDEX_ARRAY_SIZE];
 
 int graphic_main(void) {
     int result;

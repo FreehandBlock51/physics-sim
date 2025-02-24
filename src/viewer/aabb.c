@@ -20,7 +20,7 @@ void bbox_make_transform(bbox_t box, mat4 transform) {
  */
 #define BBOX_SET_VERTEX_FIELD(vertex_array, location, offset, value) vertex_array[((location) * 3) + (offset)] = value
 
-void bbox_gen_vertices(bbox_t box, GLfloat vertices[BBOX_VERTEX_ARRAY_SIZE], GLint indices[BBOX_INDEX_ARRAY_SIZE]) {
+void bbox_gen_vertices(bbox_t box, GLfloat vertices[BBOX_VERTEX_ARRAY_SIZE], GLuint indices[BBOX_INDEX_ARRAY_SIZE]) {
     // generate vertices for all of the box's corners
 
     // (left, bottom, back)

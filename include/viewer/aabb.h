@@ -33,4 +33,4 @@ void bbox_make_transform(bbox_t box, mat4 transform);
  * index array must have as much space as required by
  * BBOX_INDEX_ARRAY_SIZE
  */
-void bbox_gen_vertices(bbox_t box, GLfloat vertices[BBOX_VERTEX_ARRAY_SIZE], GLint indices[BBOX_INDEX_ARRAY_SIZE]);
+void bbox_gen_vertices(bbox_t box, GLfloat vertices[BBOX_VERTEX_ARRAY_SIZE], GLuint indices[BBOX_INDEX_ARRAY_SIZE]);
