@@ -112,13 +112,14 @@ int graphic_main(void) {
     vec3 m_axis;
     glm_vec3_zero(m_axis);
     m_axis[2] = 1.0;
+    m_axis[1] = 0.5;
     float m_angle = 0.01;
 
     vec3 m_scale;
     glm_vec3_one(m_scale);
 
     camera_t camera;
-    camera_make(&camera, (vec3){ 0, 0, 10 }, (vec3){ 0, 0, -1 }, (vec3){ 0, 1, 0 }, GLM_PI_4f, 0.1f, 100.0f);
+    camera_make(&camera, (vec3){ 0, 0, 25 }, (vec3){ 0, 0, -1 }, (vec3){ 0, 1, 0 }, GLM_PI_4f, 0.1f, 100.0f);
 
     mat4 view;
 
@@ -171,7 +172,8 @@ int graphic_main(void) {
         glUniformMatrix4fv(u_projection, 1, GL_FALSE, (float*)projection);
         shader_uniform_set(u_color, color); // glUniform4f(u_color, color.r, color.g, color.b, color.a);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, BBOX_INDEX_ARRAY_SIZE);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glDrawElements(GL_TRIANGLES, BBOX_INDEX_ARRAY_SIZE, GL_UNSIGNED_INT, 0);
 
         window_end_drawing(window);
     }
