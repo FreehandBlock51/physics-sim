@@ -48,6 +48,7 @@ int graphic_main(void) {
     l_printf("Compiling fragment shader...\n");
     shader_t fragment_shader;
     if ((result = shader_compile(GL_FRAGMENT_SHADER, shader_src_uniform_color_fragment, &fragment_shader))) {
+        glfwTerminate();
         return result;
     }
 
