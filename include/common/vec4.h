@@ -25,12 +25,12 @@ typedef union Vec4 vec4_t;
 #define vec4_to_cglm(vec) (vec.raw)
 
 typedef union Vec4 quaternion_t;
-#define quaternion_make(x, y, z, angle) ((quaternion_t)vec4_make(   \
-    x*sin(angle/2.0),                                               \
-    y*sin(angle/2.0),                                               \
-    z*sin(angle/2.0),                                               \
-    cos(angle/2.0)                                                  \
-))
+#define quaternion_make(x, y, z, angle) ((quaternion_t){ { \
+    x*sin(angle/2.0),                                      \
+    y*sin(angle/2.0),                                      \
+    z*sin(angle/2.0),                                      \
+    cos(angle/2.0)                                         \
+} })
 
 /**
  * Adds a source vector (multiplied by a factor) into a destination

@@ -24,7 +24,7 @@ typedef union Color color_t;
 /**
  * Constructs a color from the given values
  */
-#define color_make(r, g, b, a) ((color_t){ { r, g, b, a } })
+#define color_make(r, g, b, a) { { r, g, b, a } }
 /**
  * Constructs an opaque color from the given values
  */

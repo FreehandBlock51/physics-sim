@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void mat4x4_times_mat4x4(mat4x4_t dest, mat4x4_t a, mat4x4_t b) {
-    mat4x4_t result = {};
+    mat4x4_t result = {0};
     for (size_t row = 0; row < 4; row++) {
         for (size_t column = 0; column < 4; column++) {
             phy_real_t tmp = 0;

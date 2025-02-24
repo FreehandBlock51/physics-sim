@@ -34,6 +34,10 @@ CFLAGS_ESSENTIAL ?= --std=c$(C_STANDARD) $(INC_FLAGS) -MMD -MP
 # (except -pedantic; don't include it because then glad doesn't compile)
 CFLAGS_WARNINGS ?= -Wall -Werror -Wextra
 
+# Warnings we want to have on for our source files, but would cause -Werror to fail
+# the build of library code we make from scratch (e.g. GLAD)
+CFLAGS_SOURCE_WARNINGS ?= -pedantic
+
 CFLAGS := $(CFLAGS_ESSENTIAL) $(CFLAGS_WARNINGS) $(SANITIZER_FLAGS)
 
 CHECKTODOS_SCRIPT_ARGS ?=
@@ -91,15 +95,27 @@ $(BUILD_DIR)/$(TARGET_EXEC)-debug: build_shaders check_todos $(DEBUG_OBJS) $(STA
 
 $(BUILD_DIR)/%.c.o: $(SRC_DIR)/%.c
 	$(MKDIR_P) $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CFLAGS_SOURCE_WARNINGS) -c $< -o $@
 
 $(BUILD_DIR)/%.c.E: $(SRC_DIR)/%.c
 	$(MKDIR_P) $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -E -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CFLAGS_SOURCE_WARNINGS) -E $< -o $@
 
 $(BUILD_DIR)/%.c-debug.o: $(SRC_DIR)/%.c
 	$(MKDIR_P) $(dir $@)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -D DEBUG=1 --debug -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(CFLAGS_SOURCE_WARNINGS) -D DEBUG=1 --debug -c $< -o $@
+
+$(BUILD_DIR)/glad/glad.c.o: $(SRC_DIR)/glad/glad.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $(SRC_DIR)/glad/glad.c -o $(BUILD_DIR)/glad/glad.c.o
+
+$(BUILD_DIR)/glad/glad.c.E: $(SRC_DIR)/glad/glad.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -E $(SRC_DIR)/glad/glad.c -o $(BUILD_DIR)/glad/glad.c.E
+
+$(BUILD_DIR)/glad/glad.c-debug.o: $(SRC_DIR)/glad/glad.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -D DEBUG=1 --debug -c $(SRC_DIR)/glad/glad.c -o $(BUILD_DIR)/glad/glad.c-debug.o
 
 
 .PHONY: check_todos
