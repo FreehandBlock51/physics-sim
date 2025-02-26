@@ -2,7 +2,7 @@
 
 #include "common/math.h"
 
-int camera_make(camera_t *camera, vec3 position, vec3 forward, vec3 up, float fov, float near_plane, float far_plane) {
+int camera_make(camera_t *camera, vec3 position, vec3 forward, vec3 up, float fov, float aspect_width, float aspect_height, float near_plane, float far_plane) {
     if (near_plane > far_plane) {
         return -1;
     }
@@ -11,6 +11,8 @@ int camera_make(camera_t *camera, vec3 position, vec3 forward, vec3 up, float fo
     glm_vec3_normalize_to(forward, camera->forward);
     glm_vec3_normalize_to(up, camera->up);
     camera->fov = fov;
+    camera->aspect_width = aspect_width;
+    camera->aspect_height = aspect_height;
     camera->near_plane = near_plane;
     camera->far_plane = far_plane;
     return 0;
@@ -22,8 +24,6 @@ void camera_gen_view_matrix(camera_t camera, mat4 matrix) {
     glm_look(camera.position, camera.forward, camera.up, matrix);
 }
 
-void camera_gen_projection_matrix(camera_t camera, window_t window, mat4 matrix) {
-    int width, height;
-    window_get_size(window, &width, &height);
-    glm_perspective(camera.fov, (float)height / (float)width, camera.near_plane, camera.far_plane, matrix);
+void camera_gen_projection_matrix(camera_t camera, mat4 matrix) {
+    glm_perspective(camera.fov, camera.aspect_height / camera.aspect_width, camera.near_plane, camera.far_plane, matrix);
 }

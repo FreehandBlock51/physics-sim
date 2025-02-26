@@ -120,7 +120,7 @@ int graphic_main(void) {
     glm_vec3_one(m_scale);
 
     camera_t camera;
-    camera_make(&camera, (vec3){ 0, 0, 25 }, (vec3){ 0, 0, -1 }, (vec3){ 0, 1, 0 }, GLM_PI_4f, 0.1f, 100.0f);
+    camera_make(&camera, (vec3){ 0, 0, 25 }, (vec3){ 0, 0, -1 }, (vec3){ 0, 1, 0 }, GLM_PI_4f, 1.0f, 1.0f, 0.1f, 100.0f);
 
     mat4 view;
 
@@ -163,7 +163,7 @@ int graphic_main(void) {
         glm_rotate(model, m_angle, m_axis);
 
         camera_gen_view_matrix(camera, view);
-        camera_gen_projection_matrix(camera, *window, projection);
+        camera_gen_projection_matrix(camera, projection);
 
         // set VAO and shader, then draw
         shader_program_use(shader_program);
