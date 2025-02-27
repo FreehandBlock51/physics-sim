@@ -132,9 +132,11 @@ build_shaders:
 
 $(SHADER_INCLUDE_DIR)/%.h: build_shaders
 
-.PHONY: clean
+.PHONY: clean full-clean
 
-clean: clean-dependencies
+full-clean: clean clean-dependencies
+
+clean:
 	$(RM) -r $(BUILD_DIR)
 	$(RM) -r $(BUILD_INCLUDE_DIR)
 
