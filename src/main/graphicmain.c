@@ -3,9 +3,7 @@
  */
 
 #include <stdio.h>
-#include <malloc.h>
 #include <gl_includes.h>
-#include <cglm/cglm.h>
 #include "sim/aabb.h"
 #include "common/defines.h"
 #include "viewer/window.h"
