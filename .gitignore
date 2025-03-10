@@ -57,3 +57,7 @@ build/*
 dependencies/build
 dependencies/build/*
 build-include
+
+# vscode
+.vscode/*
+.vscode/
