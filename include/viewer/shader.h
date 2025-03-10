@@ -66,17 +66,7 @@ void shader_program_use(shader_program_t program);
 /**
  * Gets the location of a shader's uniform
  */
-shader_uniform_t shader_uniform_get_location(shader_program_t program, const char *uniform_name);
-
-#define shader_uniform_set(uniform, value) _Generic((value),                                \
-color_t: glUniform4f(uniform, value.r, value.g, value.b, value.a),                      \
-default: abort())
-// vec2: glUniform2f(uniform, value[0], value[1]),                                         
-// vec3_t: glUniform4f(uniform, value.x, value.y, value.z),                                
-// vec3: glUniform4f(uniform, value[0], value[1], value[2]),                               
-// vec4_t: glUniform4f(uniform, value.x, value.y, value.z, value.w),                       
-// vec4: glUniform4f(uniform, value[0], value[1], value[2], value[3]),                     
-    // mat4: glUniformMatrix4fv(uniform, 1, GL_FALSE, (GLfloat *)value),                       
+shader_uniform_t shader_uniform_get_location(shader_program_t program, const char *uniform_name);                   
 
 /**
  * Deletes a shader.  Once a shader has been linked, it can be safely
