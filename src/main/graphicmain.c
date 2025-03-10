@@ -7,12 +7,14 @@
 #include <gl_includes.h>
 #include <cglm/cglm.h>
 #include "sim/aabb.h"
+#include "sim/body.h"
 #include "common/defines.h"
 #include "viewer/window.h"
 #include "viewer/shader.h"
 #include "viewer/color.h"
 #include "viewer/camera.h"
 #include "viewer/aabb.h"
+#include "viewer/body.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -32,6 +34,8 @@ int graphic_main(void) {
         return result;
     }
 
+    body_t body;
+    body_make(&body, vec3_make(0, 0, 0), VEC3_ZERO, VEC3_ZERO, VEC3_ZERO, 1, 0, 0);
     bbox_t box;
     bbox_make(&box, 0, 0, 0, 10, 10, 10);
     bbox_gen_vertices(box, vertices, indices);
@@ -106,19 +110,6 @@ int graphic_main(void) {
 
     mat4 model; // generated each frame
 
-    vec3 m_translation;
-    glm_vec3_zero(m_translation);
-    m_translation[0] = 0.5;
-
-    vec3 m_axis;
-    glm_vec3_zero(m_axis);
-    m_axis[2] = 1.0;
-    m_axis[1] = 0.5;
-    float m_angle = 0.01;
-
-    vec3 m_scale;
-    glm_vec3_one(m_scale);
-
     camera_t camera;
     camera_make(&camera, (vec3){ 0, 0, 25 }, (vec3){ 0, 0, -1 }, (vec3){ 0, 1, 0 }, GLM_PI_4f, 1.0f, 1.0f, 0.1f, 100.0f);
 
@@ -132,25 +123,26 @@ int graphic_main(void) {
 
         // modify transformations
         if (window_is_key_down(window, GLFW_KEY_R)) {
-            m_angle += 0.01;
+            body.rotation.x += 0.01;
+            body.rotation.z += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_UP)) {
-            m_translation[1] += 0.01;
+            body.position.y += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_DOWN)) {
-            m_translation[1] -= 0.01;
+            body.position.y -= 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_RIGHT)) {
-            m_translation[0] += 0.01;
+            body.position.x += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_LEFT)) {
-            m_translation[0] -= 0.01;
+            body.position.x -= 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_RIGHT_BRACKET)) {
-            m_translation[2] += 0.01;
+            body.position.z += 0.01;
         }
         if (window_is_key_down(window, GLFW_KEY_LEFT_BRACKET)) {
-            m_translation[2] -= 0.01;
+            body.position.z -= 0.01;
         }
         if (window_is_key_released(window, GLFW_KEY_ESCAPE)) {
             printf("window closing...\n");
@@ -158,9 +150,7 @@ int graphic_main(void) {
         }
 
         // generate transformation matrix
-        glm_mat4_identity(model);
-        glm_translate(model, m_translation);
-        glm_rotate(model, m_angle, m_axis);
+        body_gen_transform(&body, model);        
 
         camera_gen_view_matrix(camera, view);
         camera_gen_projection_matrix(camera, projection);
@@ -171,7 +161,7 @@ int graphic_main(void) {
         glUniformMatrix4fv(u_model, 1, GL_FALSE, (float*)model);
         glUniformMatrix4fv(u_view, 1, GL_FALSE, (float*)view);
         glUniformMatrix4fv(u_projection, 1, GL_FALSE, (float*)projection);
-        shader_uniform_set(u_color, color); // glUniform4f(u_color, color.r, color.g, color.b, color.a);
+        glUniform4f(u_color, color.r, color.g, color.b, color.a);
         glBindVertexArray(VAO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glDrawElements(GL_TRIANGLES, BBOX_INDEX_ARRAY_SIZE, GL_UNSIGNED_INT, 0);
