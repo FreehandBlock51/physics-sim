@@ -73,3 +73,10 @@ bool bbox_is_bbox_inside(bbox_t boxA, bbox_t boxB);
  * 'Clamps' a point to the closest point within the bounds of the AABB
  */
 void bbox_clamp_point_within_bounds(bbox_t box, vec3_t *point);
+
+/**
+ * @brief Calculates the volume of an AABB
+ * @param box The AABB to use
+ * @return The AABB's volume
+ */
+phy_real_t bbox_get_volume(bbox_t box);

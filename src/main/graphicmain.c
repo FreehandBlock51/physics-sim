@@ -33,7 +33,7 @@ static GLuint  box2_indices[BBOX_INDEX_ARRAY_SIZE];
 #define CAMERA_MOVE_SPEED 0.05
 #define CAMERA_ROTATE_SPEED 0.0025
 
-#define PHY_FRAMES_PER_STEP 1
+#define PHY_FRAMES_PER_STEP -1
 
 int graphic_main(void) {
     vec3 GLOBAL_UP = { 0, 1, 0 };
@@ -45,12 +45,12 @@ int graphic_main(void) {
         return result;
     }
 
-    body_t body1, body2;
-    body_make(&body1, vec3_make(0, 0, 0), VEC3_ZERO, VEC3_UP, VEC3_ZERO, 1, 0, 0);
-    body_make(&body2, vec3_make(-1, 1, 7), VEC3_ZERO, VEC3_DOWN, VEC3_ZERO, 1, 0, 0);
     bbox_t box1, box2;
-    bbox_make(&box1, 0, 0, 0, 10, 10, 10);
-    bbox_make(&box2, 0, 0, 0, 5, 5, 5);
+    bbox_make(&box1, 0, 0, 0, 3, 3, 3);
+    bbox_make(&box2, 0, 0, 0, 1, 1, 1);
+    body_t body1, body2;
+    body_make(&body1, vec3_make(0, 0, 0), VEC3_ZERO, VEC3_UP, VEC3_ZERO, bbox_get_volume(box1), 0, 0);
+    body_make(&body2, vec3_make(-1, 1, 7), VEC3_ZERO, VEC3_DOWN, VEC3_ZERO, bbox_get_volume(box2), 0, 0);
     bbox_gen_vertices(box1, box1_vertices, box1_indices);
     bbox_gen_vertices(box2, box2_vertices, box2_indices);
 

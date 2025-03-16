@@ -43,3 +43,14 @@ void bbox_clamp_point_within_bounds(bbox_t box, vec3_t *point) {
     point->y = clamp(point->y, box.position.y + box.bottom, box.position.y + box.top);
     point->z = clamp(point->z, box.position.z + box.back, box.position.z + box.front);
 }
+
+phy_real_t bbox_get_volume(bbox_t box) {
+    phy_real_t length = box.right - box.left;
+    phy_real_t width = box.front - box.back;
+    phy_real_t height = box.top - box.bottom;
+    phy_real_t volume = length * width * height;
+    if (volume < 0) {
+        return -volume;
+    }
+    return volume;
+}
