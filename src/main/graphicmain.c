@@ -47,7 +47,7 @@ int graphic_main(void) {
 
     bbox_t box1, box2;
     bbox_make(&box1, 0, 0, 0, 3, 3, 3);
-    bbox_make(&box2, 0, 0, 0, 1, 1, 1);
+    bbox_make(&box2, 0, 0, 0, 2, 2, 2);
     body_t body1, body2;
     body_make(&body1, vec3_make(0, 0, 0), VEC3_ZERO, VEC3_UP, VEC3_ZERO, bbox_get_volume(box1), 0, 0);
     body_make(&body2, vec3_make(-1, 1, 7), VEC3_ZERO, VEC3_DOWN, VEC3_ZERO, bbox_get_volume(box2), 0, 0);
