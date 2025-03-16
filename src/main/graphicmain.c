@@ -145,7 +145,7 @@ int graphic_main(void) {
             body.position.z -= 0.01;
         }
         if (window_is_key_released(window, GLFW_KEY_ESCAPE)) {
-            printf("window closing...\n");
+            l_printf("window closing...\n");
             window_close(*window);
         }
 
