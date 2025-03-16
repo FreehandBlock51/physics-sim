@@ -15,6 +15,7 @@
 #include "viewer/camera.h"
 #include "viewer/aabb.h"
 #include "viewer/body.h"
+#include "viewer/model.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -79,32 +80,7 @@ int graphic_main(void) {
 
     l_printf("Shaders successfully built!\n");
 
-    // Create a Vertex Array Object (VAO) to store the environment we
-    // need to draw (vertices, vertex attributes, etc.)
-    GLuint VAO;
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-
-    // Create a Vertex Buffer Object (VBO) to store our vertices
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-
-    // Create an Element Buffer Object (EBO) to store our vertices
-    GLuint EBO = 0;
-    glGenBuffers(1, &EBO);
-
-    // put vertices in the VBO
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, (sizeof vertices), vertices, GL_STATIC_DRAW);
-
-    // put indices in the EBO
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (sizeof indices), indices, GL_STATIC_DRAW);
-
-    // set vertex attributes (how shader expects vertex layout)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * (sizeof *vertices), NULL);
-    glEnableVertexAttribArray(0);
+    model_t box_model = model_from_indices(vertices, 3, BBOX_VERTEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, indices, BBOX_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
 
     color_t color = COLOR_GREEN;
 
@@ -150,7 +126,7 @@ int graphic_main(void) {
         }
 
         // generate transformation matrix
-        body_gen_transform(&body, model);        
+        body_gen_transform(&body, model);
 
         camera_gen_view_matrix(camera, view);
         camera_gen_projection_matrix(camera, projection);
@@ -162,9 +138,7 @@ int graphic_main(void) {
         glUniformMatrix4fv(u_view, 1, GL_FALSE, (float*)view);
         glUniformMatrix4fv(u_projection, 1, GL_FALSE, (float*)projection);
         glUniform4f(u_color, color.r, color.g, color.b, color.a);
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, BBOX_INDEX_ARRAY_SIZE, GL_UNSIGNED_INT, 0);
+        model_draw(box_model);
 
         window_end_drawing(window);
     }
