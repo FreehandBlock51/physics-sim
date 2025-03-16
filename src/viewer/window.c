@@ -66,7 +66,7 @@ int window_init(int width, int height, const char *title, window_t *window) {
     glfwSetFramebufferSizeCallback(window->glfw_handle, (GLFWframebuffersizefun)framebuffer_size_callback);
 
     fprintf(stderr, "Warining: Attempting to rapidly diagonally resize the\
- window will result in a segfault\n");
+ window may result in a segfault\n");
 
     // set all keys in the keymap to up
     for (int i = 0; i < WINDOW_KEYMAP_SIZE; i++) {
