@@ -2,7 +2,7 @@
 
 #include "common/defines.h"
 
-#define PHY_GRAVITATIONAL_CONSTANT 6.67430E-11
+#define PHY_GRAVITATIONAL_CONSTANT 1 /* 6.67430E-11 */
 
 void body_make(body_t *body,
  vec3_t position, vec3_t rotation,
