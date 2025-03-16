@@ -2,6 +2,8 @@
 
 #include "common/defines.h"
 
+#define PHY_GRAVITATIONAL_CONSTANT 6.67430E-11
+
 void body_make(body_t *body,
  vec3_t position, vec3_t rotation,
  vec3_t velocity, vec3_t angular_velocity,
@@ -29,7 +31,7 @@ void phy_body_add_torque(body_t *body, vec3_t torque) {
 
 void phy_body_add_gravity_force(body_t *a, body_t *b) {
     phy_real_t gravity =
-        (a->mass * b->mass) /
+        (PHY_GRAVITATIONAL_CONSTANT * a->mass * b->mass) /
         vec3_distance_to(a->position, b->position);
 
     vec3_t force_a_b = b->position;
