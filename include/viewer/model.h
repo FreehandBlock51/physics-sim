@@ -2,6 +2,9 @@
 
 /**
  * Utilities for drawing objects
+ *
+ * NOTES:
+ * ! Models currently only have support for shaders with a single vertex input
  */
 
 #include <stdbool.h>
