@@ -108,19 +108,40 @@ int graphic_main(void) {
 
     mat4 projection;
 
+#if PHY_FRAMES_PER_STEP >= 0
     uint32_t frames_since_last_phy_step = 0;
+#endif
 
     while (!window_should_close(*window))
     {
         window_clear(WINDOW_BACKGROUND_COLOR);
 
+#if PHY_FRAMES_PER_STEP >= 0
         if (++frames_since_last_phy_step >= PHY_FRAMES_PER_STEP) {
+            frames_since_last_phy_step = 0;
+#else
+        if (window_is_key_pressed(window, GLFW_KEY_SPACE) || window_is_key_down(window, GLFW_KEY_LEFT_CONTROL)) {
+#endif
             phy_body_add_gravity_force(&body1, &body2);
+
+#ifndef NOCOLLISION
+            if (bbox_is_bbox_inside(box1, box2)) {
+                // a and b are colliding; find normal
+                // and do collision forces
+                vec3_t a_closest_b = box1.position;
+                bbox_clamp_point_within_bounds(box2, &a_closest_b);
+                vec3_t b_closest_a = box2.position;
+                bbox_clamp_point_within_bounds(box1, &b_closest_a);
+                vec3_t normal_a_b = b_closest_a;
+                vec3_add_to(&normal_a_b, a_closest_b, -1);
+                vec3_unit(&normal_a_b);
+                phy_calculate_normal_force(&normal_a_b, body1, normal_a_b);
+                phy_body_add_collision_forces(&body1, &body2, normal_a_b);
+            }
+#endif
 
             phy_body_step(&body1);
             phy_body_step(&body2);
-
-            frames_since_last_phy_step = 0;
         }
 
         box1.position = body1.position;
