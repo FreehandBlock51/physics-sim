@@ -33,7 +33,7 @@ static GLuint  box2_indices[BBOX_INDEX_ARRAY_SIZE];
 #define CAMERA_MOVE_SPEED 0.05
 #define CAMERA_ROTATE_SPEED 0.0025
 
-#define PHY_FRAMES_PER_STEP 1
+#define PHY_FRAMES_PER_STEP 0
 
 int graphic_main(void) {
     vec3 GLOBAL_UP = { 0, 1, 0 };
@@ -108,7 +108,7 @@ int graphic_main(void) {
 
     mat4 projection;
 
-#if PHY_FRAMES_PER_STEP >= 0
+#if PHY_FRAMES_PER_STEP > 0
     uint32_t frames_since_last_phy_step = 0;
 #endif
 
@@ -116,7 +116,7 @@ int graphic_main(void) {
     {
         window_clear(WINDOW_BACKGROUND_COLOR);
 
-#if PHY_FRAMES_PER_STEP >= 0
+#if PHY_FRAMES_PER_STEP > 0
         if (++frames_since_last_phy_step >= PHY_FRAMES_PER_STEP) {
             frames_since_last_phy_step = 0;
 #else
