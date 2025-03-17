@@ -25,5 +25,5 @@ void camera_gen_view_matrix(camera_t camera, mat4 matrix) {
 }
 
 void camera_gen_projection_matrix(camera_t camera, mat4 matrix) {
-    glm_perspective(camera.fov, camera.aspect_height / camera.aspect_width, camera.near_plane, camera.far_plane, matrix);
+    glm_perspective(camera.fov, camera.aspect_width / camera.aspect_height, camera.near_plane, camera.far_plane, matrix);
 }
