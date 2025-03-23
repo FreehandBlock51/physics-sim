@@ -54,3 +54,56 @@ phy_real_t bbox_get_volume(bbox_t box) {
     }
     return volume;
 }
+
+/**
+ * Gets the surface normal, given a vector
+ * clamped within a surface of the bounding box
+ * and relative to its center
+ */
+PRIVATE_FUNC vec3_t bbox_get_surface_normal_clamped_relative(bbox_t box, vec3_t point_on_surface) {
+    // normalize all distances to make comparason possible
+    phy_real_t dist_to_top = (box.top - point_on_surface.y) / (box.top - box.bottom);
+    phy_real_t dist_to_bottom = (point_on_surface.y - box.bottom) / (box.top - box.bottom);
+    phy_real_t dist_to_left = (point_on_surface.x - box.left) / (box.right - box.left);
+    phy_real_t dist_to_right = (box.right - point_on_surface.x) / (box.right - box.left);
+    phy_real_t dist_to_front = (box.front - point_on_surface.z) / (box.front - box.back);
+    phy_real_t dist_to_back = (point_on_surface.z - box.back) / (box.front - box.back);
+
+    phy_real_t min_x_distance = min(dist_to_left, dist_to_right);
+    phy_real_t min_y_distance = min(dist_to_top, dist_to_bottom);
+    phy_real_t min_z_distance = min(dist_to_front, dist_to_back);
+
+    phy_real_t min_distance = min(min(min_x_distance, min_y_distance), min_z_distance);
+
+    vec3_t normal = VEC3_ZERO;
+
+    // use ifs instead of switches b/c we're not checking constants
+    if (min_distance == dist_to_top) {
+        normal.y += 1;
+    }
+    if (min_distance == dist_to_bottom) {
+        normal.y -= 1;
+    }
+    if (min_distance == dist_to_left) {
+        normal.x -= 1;
+    }
+    if (min_distance == dist_to_right) {
+        normal.x += 1;
+    }
+    if (min_distance == dist_to_front) {
+        normal.z += 1;
+    }
+    if (min_distance == dist_to_back) {
+        normal.z -= 1;
+    }
+
+    return normal;
+}
+
+vec3_t bbox_get_surface_normal(bbox_t box, vec3_t point_on_surface) {
+    vec3_t clamped_point = point_on_surface;
+    bbox_clamp_point_within_bounds(box, &clamped_point);
+    vec3_add_to(&clamped_point, box.position, -1);
+
+    return bbox_get_surface_normal_clamped_relative(box, clamped_point);
+}

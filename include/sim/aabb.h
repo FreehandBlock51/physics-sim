@@ -80,3 +80,10 @@ void bbox_clamp_point_within_bounds(bbox_t box, vec3_t *point);
  * @return The AABB's volume
  */
 phy_real_t bbox_get_volume(bbox_t box);
+
+/**
+ * @brief Gets the normal of one of a bounding box's surfaces
+ * @param point_on_surface A point on the surface to get the normal of
+ * @return The normal vector, which is purpendicular to the given surface
+ */
+vec3_t bbox_get_surface_normal(bbox_t box, vec3_t point_on_surface);
