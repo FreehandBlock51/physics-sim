@@ -8,14 +8,14 @@
 #include "sim/body.h"
 #include "sim/aabb.h"
 
- 
+
  /**
   * [textmode] How many steps should the simulation run for?
   */
  #ifndef STEPS
  #define STEPS 255
  #endif
- 
+
  int text_main(void) {
      body_t a, b;
      bbox_t a_box, b_box;
@@ -31,7 +31,7 @@
          5.0,
          0.0, 0.0);
      bbox_make(&b_box, 0, 0, 0, 1, 1, 1);
- 
+
      for (int i = 0; i < STEPS; i++) {
          a_box.position = a.position;
          b_box.position = b.position;
@@ -40,18 +40,14 @@
          if (bbox_is_bbox_inside(a_box, b_box)) {
              // a and b are colliding; find normal
              // and do collision forces
-             vec3_t a_closest_b = a_box.position;
-             bbox_clamp_point_within_bounds(b_box, &a_closest_b);
              vec3_t b_closest_a = b_box.position;
              bbox_clamp_point_within_bounds(a_box, &b_closest_a);
-             vec3_t normal_a_b = b_closest_a;
-             vec3_add_to(&normal_a_b, a_closest_b, -1);
-             vec3_unit(&normal_a_b);
+             vec3_t normal_a_b = bbox_get_surface_normal(a_box, b_closest_a);
              phy_calculate_normal_force(&normal_a_b, a, normal_a_b);
              phy_body_add_collision_forces(&a, &b, normal_a_b);
          }
  #endif
- 
+
          phy_body_step(&a);
          phy_body_step(&b);
          printf("a: (%f, %f, %f); b: (%f, %f, %f)\n",
