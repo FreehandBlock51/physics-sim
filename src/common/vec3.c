@@ -76,7 +76,11 @@ void vec3_unit(vec3_t *vec) {
         return;
     }
     phy_real_t magnitude = vec3_magnitude(*vec);
-    vec3_multiply_by(vec, 1.0/magnitude);
+    if (magnitude != 0) {
+        // ensure that we aren't dividing by zero --
+        // we don't want the unit vector to be full of NaNs
+        vec3_multiply_by(vec, 1.0 / magnitude);
+    }
 }
 
 void vec3_rotate_x(vec3_t *vec, phy_real_t xrot) {
