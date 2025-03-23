@@ -11,6 +11,20 @@ phy_real_t clamp(phy_real_t value, phy_real_t min, phy_real_t max) {
     return value;
 }
 
+phy_real_t min(phy_real_t a, phy_real_t b) {
+    if (a < b) {
+        return a;
+    }
+    return b;
+}
+
+phy_real_t max(phy_real_t a, phy_real_t b) {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+
 phy_real_t mod(phy_real_t src, phy_real_t factor) {
     phy_real_t quotient = src / factor;
     phy_real_t quotient_ipart;
