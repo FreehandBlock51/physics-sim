@@ -33,7 +33,7 @@
  * @return nothing -- this pretends to return int so that TODO can use it as a placeholder value
  */
 static inline noreturn int ___abort_with_msg(const char * restrict msg) {
-    printf("%s", msg);
+    fprintf(stderr, "%s", msg);
     abort();
 }
 
