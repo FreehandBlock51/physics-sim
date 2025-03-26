@@ -44,6 +44,14 @@ void phy_body_add_force(body_t *body, vec3_t force);
 void phy_body_add_torque(body_t *body, vec3_t torque);
 
 /**
+ * Applies a force and a torque, given the force and where it is applied
+ * (relative to the body's position).
+ * Both forces and torques must be added every physics step they are
+ * affecting the body.
+ */
+void phy_body_add_force_and_torque(body_t *body, vec3_t force, vec3_t applied_at);
+
+/**
  * Calculates the force of gravity between two bodies, then adds that
  * force to both of them
  */

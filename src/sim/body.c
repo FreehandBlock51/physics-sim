@@ -29,6 +29,16 @@ void phy_body_add_torque(body_t *body, vec3_t torque) {
     vec3_add_to(&body->net_torque, torque, 1.0);
 }
 
+void phy_body_add_force_and_torque(body_t *body, vec3_t force, vec3_t applied_at) {
+    // apply force; nothing extra needs to be done here
+    phy_body_add_force(body, force);
+
+    // apply torque; torque = radius (to center of mass) x force
+    vec3_t torque;
+    vec3_cross_product(&torque, applied_at, force);
+    phy_body_add_torque(body, torque);
+}
+
 void phy_body_add_gravity_force(body_t *a, body_t *b) {
     phy_real_t gravity =
         (PHY_GRAVITATIONAL_CONSTANT * a->mass * b->mass) /
