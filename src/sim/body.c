@@ -22,14 +22,20 @@ void body_make(body_t *body,
 }
 
 void phy_body_add_force(body_t *body, vec3_t force) {
+    safe_assert(body != NULL,);
+
     vec3_add_to(&body->net_force, force, 1.0);
 }
 
 void phy_body_add_torque(body_t *body, vec3_t torque) {
+    safe_assert(body != NULL,);
+
     vec3_add_to(&body->net_torque, torque, 1.0);
 }
 
 void phy_body_add_force_and_torque(body_t *body, vec3_t force, vec3_t applied_at) {
+    safe_assert(body != NULL,);
+
     // apply force; nothing extra needs to be done here
     phy_body_add_force(body, force);
 
@@ -40,6 +46,8 @@ void phy_body_add_force_and_torque(body_t *body, vec3_t force, vec3_t applied_at
 }
 
 void phy_body_add_gravity_force(body_t *a, body_t *b) {
+    safe_assert(a != NULL && b != NULL,);
+
     phy_real_t gravity =
         (PHY_GRAVITATIONAL_CONSTANT * a->mass * b->mass) /
         vec3_distance_to(a->position, b->position);
@@ -63,6 +71,8 @@ void phy_body_add_gravity_force(body_t *a, body_t *b) {
  * This function DOES NOT affect b
  */
 PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_t normal_force) {
+    safe_assert(a != NULL && b != NULL,);
+
     // add normal force
     phy_body_add_force(a, normal_force);
 
@@ -112,6 +122,8 @@ PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_
  * (normal, friction, etc.)
  */
 void phy_body_add_collision_forces(body_t *a, body_t *b, vec3_t normal_force) {
+    safe_assert(a != NULL && b != NULL,);
+
     phy_body_add_collision_forces_to_a(a, b, normal_force);
 
     // Newton says each force on an object has an
@@ -128,6 +140,8 @@ void phy_body_add_collision_forces(body_t *a, body_t *b, vec3_t normal_force) {
  * calculates the normal force on a by b
  */
 void phy_calculate_normal_force(vec3_t *normal_a_b, body_t a, vec3_t normal_a_b_dir) {
+    safe_assert(normal_a_b != NULL,);
+
     // the velocity and force opposed by the normal
     vec3_t opposed_velocity;
     vec3_get_portion_in_direction(&opposed_velocity, a.velocity, normal_a_b_dir);
@@ -163,6 +177,8 @@ void phy_calculate_normal_force(vec3_t *normal_a_b, body_t a, vec3_t normal_a_b_
  * 'tick' they are active
  */
 void phy_body_step(body_t *body) {
+    safe_assert(body != NULL,);
+
     vec3_add_to(&body->velocity, body->net_force, 1.0/body->mass);
     vec3_clear(&body->net_force);
     vec3_add_to(&body->position, body->velocity, 1.0);

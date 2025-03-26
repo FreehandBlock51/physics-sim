@@ -1,6 +1,10 @@
 #include "sim/constraints.h"
 
+#include "common/defines.h"
+
 void spring_create(spring_t *spring, body_t *a, vec3_t a_endpoint, body_t *b, vec3_t b_endpoint, phy_real_t spring_constant) {
+    safe_assert(spring != NULL,);
+
     spring->a = a;
     spring->a_endpoint = a_endpoint;
     spring->b = b;
@@ -9,6 +13,8 @@ void spring_create(spring_t *spring, body_t *a, vec3_t a_endpoint, body_t *b, ve
 }
 
 void spring_apply_constraint(spring_t spring) {
+    safe_assert(spring.a != NULL && spring.b != NULL,);
+
     // get the spring force on a, then negate to apply to b
     vec3_t spring_force_on_a = spring.b->position;
     vec3_add_to(&spring_force_on_a, spring.a->position, 1);

@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdnoreturn.h>
+#include <assert.h>
 
 /**
  * [internal] used to allow the preprocessor to evaluate macros before
@@ -107,3 +108,10 @@ typedef float phy_real_t;
  * Joins three pieces of text together, after evaluating any macros
  */
 #define JOIN3(a, b, c) __JOIN3(a, b, c)
+
+/**
+ * Asserts a value (so it crashes when debugging),
+ * then returns early if that value isn't met
+ */
+#define safe_assert(expr, result_on_failure) \
+    assert(expr); if (!(expr)) { return result_on_failure; } (void)0
