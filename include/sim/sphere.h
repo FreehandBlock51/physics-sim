@@ -35,3 +35,9 @@ bool csphere_is_csphere_inside(csphere_t a, csphere_t b);
  * overlapping
  */
 bool csphere_is_bbox_inside(csphere_t sphere, bbox_t box);
+
+/**
+ * Given a contact point on the surface of a sphere, gets the normal
+ * of that point
+ */
+vec3_t csphere_get_surface_normal(csphere_t sphere, vec3_t point_on_surface);

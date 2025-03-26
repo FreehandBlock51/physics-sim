@@ -19,3 +19,10 @@ bool csphere_is_bbox_inside(csphere_t sphere, bbox_t box) {
     bbox_clamp_point_within_bounds(box, &closest_box_point);
     return csphere_is_point_inside(sphere, closest_box_point);
 }
+
+vec3_t csphere_get_surface_normal(csphere_t sphere, vec3_t point_on_surface) {
+    vec3_t normal = point_on_surface;
+    vec3_add_to(&normal, sphere.center, -1);
+    vec3_unit(&normal);
+    return normal;
+}
