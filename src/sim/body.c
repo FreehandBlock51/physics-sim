@@ -50,7 +50,7 @@ void phy_body_add_gravity_force(body_t *a, body_t *b) {
 
     phy_real_t gravity =
         (PHY_GRAVITATIONAL_CONSTANT * a->mass * b->mass) /
-        vec3_distance_to(a->position, b->position);
+        vec3_distance_sqr(a->position, b->position);
 
     vec3_t force_a_b = b->position;
     vec3_add_to(&force_a_b, a->position, -1.0);
