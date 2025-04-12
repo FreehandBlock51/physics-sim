@@ -61,7 +61,7 @@ phy_real_t bbox_get_volume(bbox_t box) {
  * and relative to its center
  */
 PRIVATE_FUNC vec3_t bbox_get_surface_normal_clamped_relative(bbox_t box, vec3_t point_on_surface) {
-    // normalize all distances to make comparason possible
+    // normalize all distances to make comparison possible
     phy_real_t dist_to_top = (box.top - point_on_surface.y) / (box.top - box.bottom);
     phy_real_t dist_to_bottom = (point_on_surface.y - box.bottom) / (box.top - box.bottom);
     phy_real_t dist_to_left = (point_on_surface.x - box.left) / (box.right - box.left);
