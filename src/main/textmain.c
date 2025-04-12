@@ -44,7 +44,7 @@
              bbox_clamp_point_within_bounds(a_box, &b_closest_a);
              vec3_t normal_a_b = bbox_get_surface_normal(a_box, b_closest_a);
              phy_calculate_normal_force(&normal_a_b, a, normal_a_b);
-             phy_body_add_collision_forces(&a, &b, normal_a_b);
+             phy_body_add_collision_forces(&a, &b, normal_a_b, b_closest_a);
          }
  #endif
 

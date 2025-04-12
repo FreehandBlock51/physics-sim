@@ -70,11 +70,11 @@ void phy_body_add_gravity_force(body_t *a, body_t *b) {
  * (normal, friction, etc.)
  * This function DOES NOT affect b
  */
-PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_t normal_force) {
+PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_t normal_force, vec3_t contact_point) {
     safe_assert(a != NULL && b != NULL,);
 
     // add normal force
-    phy_body_add_force(a, normal_force);
+    phy_body_add_force_and_torque(a, normal_force, contact_point);
 
     // add friction
     phy_real_t normal_magnitude = vec3_magnitude(normal_force);
@@ -82,7 +82,7 @@ PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_
         // object is essentially at rest; use static friction
 
         // get portion of net force that will oppose friction
-        // since friction is purpendicular to the normal,
+        // since friction is perpendicular to the normal,
         // we can remove the normal to get what we want
         vec3_t friction_opposed = a->net_force;
         vec3_t normal_opposed;
@@ -96,7 +96,9 @@ PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_
         // static friction is all-or-nothing;
         // it either negates all acceleration or does nothing
         if (vec3_magnitude(friction_opposed) <= friction_magnitude) {
-            vec3_add_to(&a->net_force, friction_opposed, -1);
+            vec3_t static_friction = friction_opposed;
+            vec3_multiply_by(&friction_opposed, -1);
+            phy_body_add_force_and_torque(a, static_friction, contact_point);
         }
     }
     else {
@@ -112,7 +114,7 @@ PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_
         phy_real_t friction_magnitude = friction_coeff * normal_magnitude;
         vec3_multiply_by(&friction, friction_magnitude);
 
-        phy_body_add_force(a, friction);
+        phy_body_add_force_and_torque(a, friction, contact_point);
     }
 }
 
@@ -121,17 +123,17 @@ PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_
  * adds collision-based forces on both a and b
  * (normal, friction, etc.)
  */
-void phy_body_add_collision_forces(body_t *a, body_t *b, vec3_t normal_force) {
+void phy_body_add_collision_forces(body_t *a, body_t *b, vec3_t normal_force, vec3_t contact_point) {
     safe_assert(a != NULL && b != NULL,);
 
-    phy_body_add_collision_forces_to_a(a, b, normal_force);
+    phy_body_add_collision_forces_to_a(a, b, normal_force, contact_point);
 
     // Newton says each force on an object has an
     // equal and opposite partner on the other object
     // so we just invert the normal force and do everything
     // on b this time
     vec3_multiply_by(&normal_force, -1);
-    phy_body_add_collision_forces_to_a(b, a, normal_force);
+    phy_body_add_collision_forces_to_a(b, a, normal_force, contact_point);
 }
 
 /**

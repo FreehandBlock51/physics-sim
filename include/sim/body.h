@@ -62,7 +62,7 @@ void phy_body_add_gravity_force(body_t *a, body_t *b);
  * adds collision-based forces on both a and b
  * (normal, friction, etc.)
  */
-void phy_body_add_collision_forces(body_t *a, body_t *b, vec3_t normal_force);
+void phy_body_add_collision_forces(body_t *a, body_t *b, vec3_t normal_force, vec3_t contact_point);
 
 /**
  * Given bodies a and b, as well as the

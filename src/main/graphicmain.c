@@ -49,7 +49,7 @@ int graphic_main(void) {
     bbox_make(&box1, 0, 0, 0, 3, 3, 3);
     bbox_make(&box2, 0, 0, 0, 2, 2, 2);
     body_t body1, body2;
-    body_make(&body1, vec3_make(0, 0, 0), VEC3_ZERO, vec3_make(0, 1, 0), VEC3_ZERO, 1, 0, 0);
+    body_make(&body1, vec3_make(1, 0, 0), VEC3_ZERO, vec3_make(0, 1, 0), VEC3_ZERO, 1, 0, 0);
     body_make(&body2, vec3_make(0, 10, 0), VEC3_ZERO, vec3_make(0, -0.5, 0), VEC3_ZERO, 1, 0, 0);
     bbox_gen_vertices(box1, box1_vertices, box1_indices);
     bbox_gen_vertices(box2, box2_vertices, box2_indices);
@@ -141,7 +141,7 @@ int graphic_main(void) {
                 bbox_clamp_point_within_bounds(box1, &b_closest_a);
                 vec3_t normal_a_b = bbox_get_surface_normal(box1, b_closest_a);
                 phy_calculate_normal_force(&normal_a_b, body1, normal_a_b);
-                phy_body_add_collision_forces(&body1, &body2, normal_a_b);
+                phy_body_add_collision_forces(&body1, &body2, normal_a_b, b_closest_a);
             }
 #endif
 
