@@ -123,7 +123,7 @@ model_t model_from_vertices(const GLfloat *vertices, size_t vertex_stride, size_
  * @param index_count How many indices should be loaded
  * @param index_buffer_kind How will the index buffer be used after this model is created?
  * @param model_draw_style How should OpenGL render this model? (e.g. GL_TRIANGLES)
- * @return
+ * @return A model representing the given vertices and indices
  */
 model_t model_from_indices(
     const GLfloat *vertices,
