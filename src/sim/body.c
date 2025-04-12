@@ -150,14 +150,14 @@ void phy_calculate_normal_force(vec3_t *normal_a_b, body_t a, vec3_t normal_a_b_
 
     // only oppose velocity & force bringing
     // the colliding bodies together
-    if (vec3_dot_product(opposed_velocity, normal_a_b_dir) > 0) {
-        // normal and velocity are in the same direction;
-        // apply no force
+    if (vec3_dot_product(opposed_velocity, normal_a_b_dir) < 0) {
+        // normal and velocity are in opposite directions, which means
+        // this body is not moving towards the collision; apply no force
         vec3_clear(&opposed_velocity);
     }
-    if (vec3_dot_product(opposed_force, normal_a_b_dir) > 0) {
-        // normal and force are in the same direction;
-        // apply no force
+    if (vec3_dot_product(opposed_force, normal_a_b_dir) < 0) {
+        // normal and force are in opposite directions, which means
+        // this body will not accelerate towards the collision; apply no force
         vec3_clear(&opposed_force);
     }
 
