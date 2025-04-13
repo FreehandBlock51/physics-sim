@@ -31,6 +31,7 @@ typedef union Vec4 quaternion_t;
     z*sin(angle/2.0),                                      \
     cos(angle/2.0)                                         \
 } })
+#define QUATERNION_NOROTATION quaternion_make(1, 0, 0, 0)
 
 /**
  * Adds a source vector (multiplied by a factor) into a destination

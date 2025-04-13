@@ -34,7 +34,7 @@ void transform_make(
  * (position and rotation are 0; scale is 1)
  */
 #define transform_default(transform) \
-transform_make(transform, VEC3_ZERO, quaternion_make(1, 0, 0, 0), VEC3_ONE)
+transform_make(transform, VEC3_ZERO, QUATERNION_NOROTATION, VEC3_ONE)
 
 /**
  * Translates a transform by a given vector
