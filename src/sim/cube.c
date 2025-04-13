@@ -71,12 +71,10 @@ bool ccube_is_sphere_inside(ccube_t cube, csphere_t sphere) {
 }
 
 bool ccube_is_ccube_inside(ccube_t a, ccube_t b) {
-    // cancel out a's rotation so we can treat this like a cube-bbox check
-    quaternion_t a_rot_reversed = a.rotation;
-    quaternion_conjugate(&a_rot_reversed);
-    vec4_cross_product(&b.rotation, b.rotation, a_rot_reversed);
-    vec3_rotate_by_quaternion(&b.position, b.position, a.rotation);
-    a.rotation = VEC4_ZERO;
+    // cancel out a's position and rotation so we can treat this like a cube-bbox check
+    ccube_apply_cube_transformations(a, &b.position);
+    a.position = VEC3_ZERO;
+    a.rotation = QUATERNION_NOROTATION;
 
     // Do the cube-bbox check.  We inline it here so we don't have to
     // initialize an actual bbox
