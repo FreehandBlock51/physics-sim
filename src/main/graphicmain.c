@@ -8,6 +8,7 @@
 #include <cglm/cglm.h>
 #include "sim/cube.h"
 #include "sim/body.h"
+#include "sim/constraints.h"
 #include "common/defines.h"
 #include "viewer/window.h"
 #include "viewer/shader.h"
@@ -52,6 +53,9 @@ int graphic_main(void) {
     body_make(&body2, vec3_make(0, 5, 0), VEC3_ZERO, vec3_make(0, -1, 0), VEC3_ZERO, 1, 0, 0);
     ccube_gen_vertices(cube1, cube1_vertices, cube1_indices);
     ccube_gen_vertices(cube2, cube2_vertices, cube2_indices);
+
+    spring_t spring;
+    spring_create(&spring, &body1, VEC3_ZERO, &body2, VEC3_ZERO, 0.1, 5);
 
     l_printf("Building shaders...\n");
 
@@ -131,6 +135,7 @@ int graphic_main(void) {
         if (window_is_key_pressed(window, GLFW_KEY_SPACE) || window_is_key_down(window, GLFW_KEY_LEFT_CONTROL)) {
 #endif
             phy_body_add_gravity_force(&body1, &body2);
+            spring_apply_constraint(spring);
 
 #ifndef NOCOLLISION
             if (ccube_is_ccube_inside(cube1, cube2)) {
