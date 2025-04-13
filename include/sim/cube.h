@@ -24,8 +24,8 @@ typedef struct CubeCollider ccube_t;
  * Creates a cube with the given length, width, height, and rotation,
  * centered at the provided position
  */
-#define ccube_make(position, rotation, length, width, height) \
-    ((ccube_t){ .position = position, .rotation = rotation, .length = length, .width = width, .height = height })
+#define ccube_make(_position, _rotation, _length, _width, _height) \
+    ((ccube_t){ .position = _position, .rotation = _rotation, .length = _length, .width = _width, .height = _height })
 
 /**
  * Checks if a point is inside the given cube
