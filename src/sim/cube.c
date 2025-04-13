@@ -69,3 +69,18 @@ bool ccube_is_sphere_inside(ccube_t cube, csphere_t sphere) {
     ccube_clamp_point_within_cube(cube, &closest_to_cube_center);
     return csphere_is_point_inside(sphere, closest_to_cube_center);
 }
+
+bool ccube_is_ccube_inside(ccube_t a, ccube_t b) {
+    // cancel out a's rotation so we can treat this like a cube-bbox check
+    quaternion_t a_rot_reversed = a.rotation;
+    quaternion_conjugate(&a_rot_reversed);
+    vec4_cross_product(&b.rotation, b.rotation, a_rot_reversed);
+    vec3_rotate_by_quaternion(&b.position, b.position, a.rotation);
+    a.rotation = VEC4_ZERO;
+
+    // Do the cube-bbox check.  We inline it here so we don't have to
+    // initialize an actual bbox
+    vec3_t a_closest_b = b.position;
+    ccube_clamp_point_within_cube(a, &a_closest_b);
+    return ccube_is_point_inside(b, a_closest_b);
+}

@@ -47,3 +47,8 @@ bool ccube_is_bbox_inside(ccube_t cube, bbox_t box);
  * Checks if a sphere and a cube are overlapping
  */
 bool ccube_is_sphere_inside(ccube_t cube, csphere_t sphere);
+
+/**
+ * Checks if two cubes are overlapping
+ */
+bool ccube_is_ccube_inside(ccube_t a, ccube_t b);
