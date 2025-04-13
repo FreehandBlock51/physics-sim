@@ -93,10 +93,5 @@ vec3_t ccube_get_surface_normal(ccube_t cube, vec3_t point_on_surface) {
     // box operation
     bbox_t cube_box;
     bbox_make(&cube_box, 0, 0, 0, cube.length, cube.width, cube.height);
-    bbox_get_surface_normal(cube_box, point_on_surface);
-
-    // finally, undo transformations to get the point back to world space
-    ccube_undo_cube_transformations(cube, &point_on_surface);
-
-    return point_on_surface;
+    return bbox_get_surface_normal(cube_box, point_on_surface);
 }
