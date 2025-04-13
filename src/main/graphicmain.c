@@ -6,14 +6,14 @@
 #include <malloc.h>
 #include <gl_includes.h>
 #include <cglm/cglm.h>
-#include "sim/aabb.h"
+#include "sim/cube.h"
 #include "sim/body.h"
 #include "common/defines.h"
 #include "viewer/window.h"
 #include "viewer/shader.h"
 #include "viewer/color.h"
 #include "viewer/camera.h"
-#include "viewer/aabb.h"
+#include "viewer/cube.h"
 #include "viewer/body.h"
 #include "viewer/model.h"
 
@@ -25,10 +25,10 @@ const color_t WINDOW_BACKGROUND_COLOR = COLOR_PURPLE;
 #include "shaders/matrix_vertex.h"
 #include "shaders/uniform_color_fragment.h"
 
-static GLfloat box1_vertices[BBOX_VERTEX_ARRAY_SIZE];
-static GLuint  box1_indices[BBOX_INDEX_ARRAY_SIZE];
-static GLfloat box2_vertices[BBOX_VERTEX_ARRAY_SIZE];
-static GLuint  box2_indices[BBOX_INDEX_ARRAY_SIZE];
+static GLfloat cube1_vertices[CCUBE_VERTEX_ARRAY_SIZE];
+static GLuint  cube1_indices[CCUBE_INDEX_ARRAY_SIZE];
+static GLfloat cube2_vertices[CCUBE_VERTEX_ARRAY_SIZE];
+static GLuint  cube2_indices[CCUBE_INDEX_ARRAY_SIZE];
 
 #define CAMERA_MOVE_SPEED 0.05
 #define CAMERA_ROTATE_SPEED 0.0025
@@ -45,14 +45,13 @@ int graphic_main(void) {
         return result;
     }
 
-    bbox_t box1, box2;
-    bbox_make(&box1, 0, 0, 0, 3, 3, 3);
-    bbox_make(&box2, 0, 0, 0, 2, 2, 2);
+    ccube_t cube1 = ccube_make(VEC3_ZERO, QUATERNION_NOROTATION, 3, 3, 3);
+    ccube_t cube2 = ccube_make(VEC3_ZERO, QUATERNION_NOROTATION, 2, 2, 2);
     body_t body1, body2;
-    body_make(&body1, vec3_make(1, 0, 0), VEC3_ZERO, vec3_make(0, 1, 0), VEC3_ZERO, 1, 0, 0);
-    body_make(&body2, vec3_make(0, 10, 0), VEC3_ZERO, vec3_make(0, -0.5, 0), VEC3_ZERO, 1, 0, 0);
-    bbox_gen_vertices(box1, box1_vertices, box1_indices);
-    bbox_gen_vertices(box2, box2_vertices, box2_indices);
+    body_make(&body1, vec3_make(1, -5, 0), VEC3_ZERO, vec3_make(0, 1, 0), VEC3_ZERO, 1, 0, 0);
+    body_make(&body2, vec3_make(0, 5, 0), VEC3_ZERO, vec3_make(0, -1, 0), VEC3_ZERO, 1, 0, 0);
+    ccube_gen_vertices(cube1, cube1_vertices, cube1_indices);
+    ccube_gen_vertices(cube2, cube2_vertices, cube2_indices);
 
     l_printf("Building shaders...\n");
 
@@ -93,8 +92,8 @@ int graphic_main(void) {
 
     l_printf("Shaders successfully built!\n");
 
-    model_t box1_model = model_from_indices(box1_vertices, 3, BBOX_VERTEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, box1_indices, BBOX_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
-    model_t box2_model = model_from_indices(box2_vertices, 3, BBOX_VERTEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, box2_indices, BBOX_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
+    model_t box1_model = model_from_indices(cube1_vertices, 3, CCUBE_VERTEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, cube1_indices, CCUBE_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
+    model_t box2_model = model_from_indices(cube2_vertices, 3, CCUBE_VERTEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, cube2_indices, CCUBE_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
 
     color_t color1 = COLOR_GREEN;
     color_t color2 = COLOR_BLUE;
@@ -134,12 +133,12 @@ int graphic_main(void) {
             phy_body_add_gravity_force(&body1, &body2);
 
 #ifndef NOCOLLISION
-            if (bbox_is_bbox_inside(box1, box2)) {
+            if (ccube_is_ccube_inside(cube1, cube2)) {
                 // a and b are colliding; find normal
                 // and do collision forces
-                vec3_t b_closest_a = box2.position;
-                bbox_clamp_point_within_bounds(box1, &b_closest_a);
-                vec3_t normal_a_b = bbox_get_surface_normal(box1, b_closest_a);
+                vec3_t b_closest_a = cube2.position;
+                ccube_clamp_point_within_cube(cube1, &b_closest_a);
+                vec3_t normal_a_b = ccube_get_surface_normal(cube1, b_closest_a);
                 phy_calculate_normal_force(&normal_a_b, body1, normal_a_b);
                 phy_body_add_collision_forces(&body1, &body2, normal_a_b, b_closest_a);
             }
@@ -149,8 +148,10 @@ int graphic_main(void) {
             phy_body_step(&body2);
         }
 
-        box1.position = body1.position;
-        box2.position = body2.position;
+        cube1.position = body1.position;
+        glm_euler_xyz_quat(vec3_to_cglm(body1.rotation), vec4_to_cglm(cube1.rotation));
+        cube2.position = body2.position;
+        glm_euler_xyz_quat(vec3_to_cglm(body2.rotation), vec4_to_cglm(cube2.rotation));
 
         // move camera up and down
         if (window_is_key_down(window, GLFW_KEY_E)) {

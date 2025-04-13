@@ -82,3 +82,21 @@ bool ccube_is_ccube_inside(ccube_t a, ccube_t b) {
     ccube_clamp_point_within_cube(a, &a_closest_b);
     return ccube_is_point_inside(b, a_closest_b);
 }
+
+vec3_t ccube_get_surface_normal(ccube_t cube, vec3_t point_on_surface) {
+    // clamp the point and transform it so that it is relative to the cube's
+    // center and within the cube's extents
+    ccube_clamp_point_within_cube(cube, &point_on_surface);
+    ccube_apply_cube_transformations(cube, &point_on_surface);
+
+    // now that we've applied transformations, we can treat this as a bounding
+    // box operation
+    bbox_t cube_box;
+    bbox_make(&cube_box, 0, 0, 0, cube.length, cube.width, cube.height);
+    bbox_get_surface_normal(cube_box, point_on_surface);
+
+    // finally, undo transformations to get the point back to world space
+    ccube_undo_cube_transformations(cube, &point_on_surface);
+
+    return point_on_surface;
+}

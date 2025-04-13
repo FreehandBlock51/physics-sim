@@ -52,3 +52,11 @@ bool ccube_is_sphere_inside(ccube_t cube, csphere_t sphere);
  * Checks if two cubes are overlapping
  */
 bool ccube_is_ccube_inside(ccube_t a, ccube_t b);
+
+/**
+ * @brief Gets the surface normal of a point on a given cube
+ * @param cube The cube to get the surface normal of
+ * @param point_on_surface The point where the normal will start
+ * @return The surface normal
+ */
+vec3_t ccube_get_surface_normal(ccube_t cube, vec3_t point_on_surface);
