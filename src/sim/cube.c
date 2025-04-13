@@ -93,5 +93,11 @@ vec3_t ccube_get_surface_normal(ccube_t cube, vec3_t point_on_surface) {
     // box operation
     bbox_t cube_box;
     bbox_make(&cube_box, 0, 0, 0, cube.length, cube.width, cube.height);
-    return bbox_get_surface_normal(cube_box, point_on_surface);
+    vec3_t surface_normal = bbox_get_surface_normal(cube_box, point_on_surface);
+
+    // undo the rotation, but not the translation
+    cube.position = VEC3_ZERO;
+    ccube_undo_cube_transformations(cube, &surface_normal);
+
+    return surface_normal;
 }
