@@ -172,6 +172,12 @@ void phy_calculate_normal_force(vec3_t *normal_a_b, body_t a, vec3_t normal_a_b_
     vec3_add_to(normal_a_b, opposed_force, -1);
 }
 
+void phy_body_add_drag_force(body_t *body, phy_real_t drag_coefficient) {
+    vec3_t drag_force = body->velocity;
+    vec3_multiply_by(&drag_force, -drag_coefficient);
+    phy_body_add_force(body, drag_force);
+}
+
 /**
  * Applies all forces and torques on a body
  * over a single 'tick.'  This resets force

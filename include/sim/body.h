@@ -72,6 +72,11 @@ void phy_body_add_collision_forces(body_t *a, body_t *b, vec3_t normal_force, ve
 void phy_calculate_normal_force(vec3_t *normal_a_b, body_t a, vec3_t normal_a_b_dir);
 
 /**
+ * Applies a linear drag force of the given coefficient to a body
+ */
+void phy_body_add_drag_force(body_t *body, phy_real_t drag_coefficient);
+
+/**
  * Applies all forces and torques on a body
  * over a single 'step.'  This resets force
  * and torque; both should be applied every
