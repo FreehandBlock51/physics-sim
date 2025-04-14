@@ -176,6 +176,10 @@ void phy_body_add_drag_force(body_t *body, phy_real_t drag_coefficient) {
     vec3_t drag_force = body->velocity;
     vec3_multiply_by(&drag_force, -drag_coefficient);
     phy_body_add_force(body, drag_force);
+
+    vec3_t drag_torque = body->angular_velocity;
+    vec3_multiply_by(&drag_torque, -drag_coefficient);
+    phy_body_add_torque(body, drag_torque);
 }
 
 /**
