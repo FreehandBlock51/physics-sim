@@ -115,6 +115,8 @@ int graphic_main(void) {
     uint32_t frames_since_last_phy_step = 0;
 #endif
 
+    bool draw_wireframes = false;
+
     while (!window_should_close(*window))
     {
         window_clear(WINDOW_BACKGROUND_COLOR);
@@ -213,6 +215,17 @@ int graphic_main(void) {
             glm_vec3_cross(camera.forward, camera.up, right);
             glm_vec3_rotate(camera.forward, -0.001, right);
             glm_vec3_rotate(camera.up, -0.001, right);
+        }
+
+        // toggle wireframe drawing
+        if (window_is_key_pressed(window, GLFW_KEY_F4)) {
+            draw_wireframes = !draw_wireframes;
+            if (draw_wireframes) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+            else {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
         }
 
         // close the window if asked to
