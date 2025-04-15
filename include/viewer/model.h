@@ -84,7 +84,7 @@ struct Model {
     GLuint EBO;
     /**
      * Determines how OpenGL will draw the vertices.  For example,
-     * a value of GL_TRIANGLES will cause OpenGL to draw triangles
+     * a value of MODEL_DRAW_TRIANGLES will cause OpenGL to draw triangles
      * using each set of three provided vertices
      */
     drawstyle_t model_draw_style;
