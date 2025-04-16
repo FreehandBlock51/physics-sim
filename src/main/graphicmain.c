@@ -96,8 +96,9 @@ int graphic_main(void) {
 
     l_printf("Shaders successfully built!\n");
 
-    model_t box1_model = model_from_indices(cube1_vertices, 3, CCUBE_VERTEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, cube1_indices, CCUBE_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
-    model_t box2_model = model_from_indices(cube2_vertices, 3, CCUBE_VERTEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, cube2_indices, CCUBE_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
+    const mvblueprint_t blueprints[] = { mvblueprint_make(MVT_FLOAT, 3) };
+    model_t box1_model = model_from_indices(cube1_vertices, CCUBE_VERTEX_ARRAY_SIZE, blueprints, 1, MODEL_BUFFER_STATIC, cube1_indices, CCUBE_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
+    model_t box2_model = model_from_indices(cube2_vertices, CCUBE_VERTEX_ARRAY_SIZE, blueprints, 1, MODEL_BUFFER_STATIC, cube2_indices, CCUBE_INDEX_ARRAY_SIZE, MODEL_BUFFER_STATIC, MODEL_DRAW_TRIANGLES);
 
     color_t color1 = COLOR_GREEN;
     color_t color2 = COLOR_BLUE;
