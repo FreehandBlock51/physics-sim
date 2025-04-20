@@ -10,6 +10,8 @@ void body_make(body_t *body,
  phy_real_t mass,
  phy_real_t static_friction, phy_real_t kinetic_friction)
 {
+    safe_assert(body != NULL,);
+
     body->position = position;
     body->rotation = rotation;
     body->velocity = velocity;
