@@ -1,6 +1,8 @@
 #include "viewer/body.h"
 
 void body_gen_transform(body_t *body, mat4 transform_matrix) {
+    safe_assert(body != NULL,);
+
     mat4 rotation;
 
     glm_mat4_identity(transform_matrix);
