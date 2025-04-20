@@ -21,7 +21,7 @@ int shader_compile(shader_kind_t kind, const char *source, shader_t *dest) {
     {
 #ifndef NO_LOGGING
         glGetShaderInfoLog(shader, SHADER_MAX_LOG_SIZE, NULL, info_log);
-        l_printf("Fatal: couldn't compile shader (gl returned %d): %s\n", compile_result, info_log);
+        l_printf("Fatal: couldn't compile shader (gl returned %d):\n%s\n", compile_result, info_log);
 #endif
         return -1;
     }
