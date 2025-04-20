@@ -1,9 +1,16 @@
 #version 330 core
 
+in vec3 color_helper;
+
 out vec4 out_color;
 
 uniform vec4 color;
 
 void main() {
-    out_color = color;
+    out_color = vec4(
+        color.r * (color_helper.r + 0.5),
+        color.g * (color_helper.g + 0.5),
+        color.b * (color_helper.b + 0.5),
+        color.a
+    );
 }
