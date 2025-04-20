@@ -6,21 +6,6 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 color_helper;
-
-float min_component(vec3 vec) {
-    return min(min(vec.x, vec.y), vec.z);
-}
-
 void main() {
     gl_Position = projection * view * model * vec4(in_position, 1.0f);
-
-    vec3 normalized = normalize(in_position);
-    float min = min_component(normalized);
-    if (min < 0) {
-        color_helper = normalize(normalized + vec3(min, min, min));
-    }
-    else {
-        color_helper = normalized;
-    }
 }

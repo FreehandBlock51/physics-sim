@@ -23,8 +23,8 @@
 #define WINDOW_NAME "Physics Sim"
 const color_t WINDOW_BACKGROUND_COLOR = COLOR_PURPLE;
 
-#include "shaders/matrix_vertex.h"
-#include "shaders/uniform_color_fragment.h"
+#include "shaders/matrix_color_passthrough_vertex.h"
+#include "shaders/uniform_color_modified_fragment.h"
 
 static GLfloat cube1_vertices[CCUBE_VERTEX_ARRAY_SIZE];
 static GLuint  cube1_indices[CCUBE_INDEX_ARRAY_SIZE];
@@ -61,14 +61,14 @@ int graphic_main(void) {
 
     l_printf("Compiling vertex shader...\n");
     shader_t vertex_shader;
-    if ((result = shader_compile(GL_VERTEX_SHADER, shader_src_matrix_vertex, &vertex_shader))) {
+    if ((result = shader_compile(GL_VERTEX_SHADER, shader_src_matrix_color_passthrough_vertex, &vertex_shader))) {
         glfwTerminate();
         return result;
     }
 
     l_printf("Compiling fragment shader...\n");
     shader_t fragment_shader;
-    if ((result = shader_compile(GL_FRAGMENT_SHADER, shader_src_uniform_color_fragment, &fragment_shader))) {
+    if ((result = shader_compile(GL_FRAGMENT_SHADER, shader_src_uniform_color_modified_fragment, &fragment_shader))) {
         glfwTerminate();
         return result;
     }
