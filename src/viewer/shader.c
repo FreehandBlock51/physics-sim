@@ -1,8 +1,11 @@
 #include "viewer/shader.h"
 
 #include <stdio.h>
+#include "common/defines.h"
 
 int shader_compile(shader_kind_t kind, const char *source, shader_t *dest) {
+    safe_assert(dest != NULL, -2);
+
     int compile_result;
 
 #ifndef NO_LOGGING
