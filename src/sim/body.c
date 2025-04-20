@@ -188,13 +188,13 @@ void phy_body_add_drag_force(body_t *body, phy_real_t drag_coefficient) {
  * and torque; both should be applied every
  * 'tick' they are active
  */
-void phy_body_step(body_t *body) {
+void phy_body_step(body_t *body, phy_real_t delta_time) {
     safe_assert(body != NULL,);
 
-    vec3_add_to(&body->velocity, body->net_force, 1.0/body->mass);
+    vec3_add_to(&body->velocity, body->net_force, delta_time / body->mass);
     vec3_clear(&body->net_force);
-    vec3_add_to(&body->position, body->velocity, 1.0);
-    vec3_add_to(&body->angular_velocity, body->net_torque, 1.0/body->mass);
+    vec3_add_to(&body->position, body->velocity, delta_time);
+    vec3_add_to(&body->angular_velocity, body->net_torque, delta_time / body->mass);
     vec3_clear(&body->net_torque);
-    vec3_add_to(&body->rotation, body->angular_velocity, 1.0);
+    vec3_add_to(&body->rotation, body->angular_velocity, delta_time);
 }

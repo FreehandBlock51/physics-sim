@@ -82,4 +82,4 @@ void phy_body_add_drag_force(body_t *body, phy_real_t drag_coefficient);
  * and torque; both should be applied every
  * step they are active
  */
-void phy_body_step(body_t *body);
+void phy_body_step(body_t *body, phy_real_t delta_time);

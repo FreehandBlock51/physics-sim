@@ -152,8 +152,8 @@ int graphic_main(void) {
             }
 #endif
 
-            phy_body_step(&body1);
-            phy_body_step(&body2);
+            phy_body_step(&body1, 1.0);
+            phy_body_step(&body2, 1.0);
         }
 
         cube1.position = body1.position;

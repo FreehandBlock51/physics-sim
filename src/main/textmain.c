@@ -48,8 +48,8 @@
          }
  #endif
 
-         phy_body_step(&a);
-         phy_body_step(&b);
+         phy_body_step(&a, 1.0);
+         phy_body_step(&b, 1.0);
          printf("a: (%f, %f, %f); b: (%f, %f, %f)\n",
              a.position.x, a.position.y, a.position.z,
              b.position.x, b.position.y, b.position.z);
