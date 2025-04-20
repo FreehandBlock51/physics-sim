@@ -99,5 +99,7 @@ vec3_t ccube_get_surface_normal(ccube_t cube, vec3_t point_on_surface) {
     cube.position = VEC3_ZERO;
     ccube_undo_cube_transformations(cube, &surface_normal);
 
+    vec3_unit(&surface_normal);  // to make sure it's actually a UNIT normal
+
     return surface_normal;
 }
