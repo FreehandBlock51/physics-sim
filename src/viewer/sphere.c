@@ -4,7 +4,7 @@
 
 void csphere_make_transform(csphere_t sphere, mat4 transform) {
     glm_mat4_identity(transform);
-    glm_translate(transform, vec3_to_cglm(sphere.position));
+    glm_translate(transform, vec3_to_cglm(sphere.center));
 }
 
 void csphere_gen_vertices(csphere_t sphere, GLfloat vertices[CSPHERE_VERTEX_ARRAY_SIZE]) {
