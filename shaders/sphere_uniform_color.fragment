@@ -1,0 +1,16 @@
+#version 330 core
+
+in vec3 in_position_relative;
+in float radius;
+
+out vec4 out_color;
+
+uniform vec4 color;
+
+void main() {
+    if (magnitude(in_position_relative) > radius) {
+        discard;
+    }
+
+    out_color = color;
+}
