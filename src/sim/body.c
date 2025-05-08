@@ -72,7 +72,7 @@ void phy_body_add_gravity_force(body_t *a, body_t *b) {
  * (normal, friction, etc.)
  * This function DOES NOT affect b
  */
-PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, body_t *b, vec3_t normal_force, vec3_t contact_point) {
+PRIVATE_FUNC void phy_body_add_collision_forces_to_a(body_t *a, const body_t *b, vec3_t normal_force, vec3_t contact_point) {
     safe_assert(a != NULL && b != NULL,);
 
     // add normal force

@@ -62,14 +62,14 @@ int graphic_main(void) {
     l_printf("Compiling vertex shader...\n");
     shader_t vertex_shader;
     if ((result = shader_compile(GL_VERTEX_SHADER, shader_src_matrix_color_passthrough_vertex, &vertex_shader))) {
-        glfwTerminate();
+        window_cleanup();
         return result;
     }
 
     l_printf("Compiling fragment shader...\n");
     shader_t fragment_shader;
     if ((result = shader_compile(GL_FRAGMENT_SHADER, shader_src_uniform_color_modified_fragment, &fragment_shader))) {
-        glfwTerminate();
+        window_cleanup();
         return result;
     }
 
@@ -83,6 +83,7 @@ int graphic_main(void) {
 
     l_printf("Linking program...\n");
     if ((result = shader_program_link(shader_program)) != 0) {
+        window_cleanup();
         return result;
     }
 
@@ -263,7 +264,7 @@ int graphic_main(void) {
         window_end_drawing(window);
     }
 
-    free(window);
     window_cleanup();
+    free(window);
     return 0;
 }
