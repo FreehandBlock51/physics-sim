@@ -32,7 +32,7 @@ static GLfloat cube2_vertices[CCUBE_VERTEX_ARRAY_SIZE];
 static GLuint  cube2_indices[CCUBE_INDEX_ARRAY_SIZE];
 
 #define CAMERA_MOVE_SPEED 0.05
-#define CAMERA_ROTATE_SPEED 0.0025
+#define CAMERA_ROTATE_SPEED 0.0125
 
 #define PHY_FRAMES_PER_STEP 0
 
@@ -209,14 +209,14 @@ int graphic_main(void) {
         if (window_is_key_down(window, GLFW_KEY_UP)) {
             vec3 right;
             glm_vec3_cross(camera.forward, camera.up, right);
-            glm_vec3_rotate(camera.forward, 0.001, right);
-            glm_vec3_rotate(camera.up, 0.001, right);
+            glm_vec3_rotate(camera.forward, CAMERA_ROTATE_SPEED, right);
+            glm_vec3_rotate(camera.up, CAMERA_ROTATE_SPEED, right);
         }
         if (window_is_key_down(window, GLFW_KEY_DOWN)) {
             vec3 right;
             glm_vec3_cross(camera.forward, camera.up, right);
-            glm_vec3_rotate(camera.forward, -0.001, right);
-            glm_vec3_rotate(camera.up, -0.001, right);
+            glm_vec3_rotate(camera.forward, -CAMERA_ROTATE_SPEED, right);
+            glm_vec3_rotate(camera.up, -CAMERA_ROTATE_SPEED, right);
         }
 
         // toggle wireframe drawing
